@@ -3,6 +3,7 @@ import type { NestApplication } from '@nestjs/core';
 import { CACHE_INSTANCE_ID_PROPERTY } from '../src/ttl-cache.constants';
 import { TtlCacheModule } from '../src/ttl-cache.module';
 import { TtlCache } from '../src/providers/ttl-cache';
+import { wrapCacheKey } from '../src/utils/wrap-cache-key';
 import { TestService } from './test-app/test.service';
 import { CacheableTestService } from './test-app/cacheable-test.service';
 import { sleep } from './test-app/utils/sleep';
@@ -31,14 +32,16 @@ describe('Cached decorator test suite', () => {
 
 	test('Cached getter should cache the result', async () => {
 		const testService = await app.resolve(TestService);
-		const cachedKey = `${TestService.name}.getRandomNumberGetter`;
+		const cachedKey = wrapCacheKey(`${TestService.name}.getRandomNumberGetter`);
 		const val = testService.getRandomNumberGetter;
 		expect(cache.get(cachedKey)).toBe(val);
 	});
 
 	test('Cached method should cache the result', async () => {
 		const cacheableTestService = await app.resolve(CacheableTestService);
-		const cachedKey = `${CacheableTestService.name}_${cacheableTestService[CACHE_INSTANCE_ID_PROPERTY]}.getRandomNumber`;
+		const cachedKey = wrapCacheKey(
+			`${CacheableTestService.name}_${cacheableTestService[CACHE_INSTANCE_ID_PROPERTY]}.getRandomNumber`
+		);
 
 		const val = cacheableTestService.getRandomNumber();
 		expect(cache.get(cachedKey)).toBe(val);
@@ -46,7 +49,9 @@ describe('Cached decorator test suite', () => {
 
 	test('Cached method should cache the result only for the specified TTL', async () => {
 		const cacheableTestService = await app.resolve(CacheableTestService);
-		const cachedKey = `${CacheableTestService.name}_${cacheableTestService[CACHE_INSTANCE_ID_PROPERTY]}.getRandomNumber`;
+		const cachedKey = wrapCacheKey(
+			`${CacheableTestService.name}_${cacheableTestService[CACHE_INSTANCE_ID_PROPERTY]}.getRandomNumber`
+		);
 
 		const val = cacheableTestService.getRandomNumber();
 		expect(cache.get(cachedKey)).toBe(val);
@@ -61,7 +66,7 @@ describe('Cached decorator test suite', () => {
 
 	test('Cached method should update TTL if "updateAgeOnGet" specified in decorator options', async () => {
 		const testService = await app.resolve(TestService);
-		const cachedKey = `${TestService.name}.getRandomNumberWithEnabledTtlUpdate`;
+		const cachedKey = wrapCacheKey(`${TestService.name}.getRandomNumberWithEnabledTtlUpdate`);
 
 		testService.getRandomNumberWithEnabledTtlUpdate();
 		await sleep(50);
@@ -71,7 +76,7 @@ describe('Cached decorator test suite', () => {
 
 	test('Cached method should update TTL if "updateAgeOnGet" specified in argument options', async () => {
 		const testService = await app.resolve(TestService);
-		const cachedKey = `${TestService.name}.getRandomNumberWithOptions`;
+		const cachedKey = wrapCacheKey(`${TestService.name}.getRandomNumberWithOptions`);
 
 		testService.getRandomNumberWithOptions();
 		await sleep(50);
@@ -112,7 +117,7 @@ describe('Cached decorator test suite', () => {
 	test('Cached method should ignore argument options', async () => {
 		const ttl = 50;
 		const testService = await app.resolve(TestService);
-		const cacheKey = `${TestService.name}.getRandomNumber`;
+		const cacheKey = wrapCacheKey(`${TestService.name}.getRandomNumber`);
 		const val = testService.getRandomNumber({ ttl });
 
 		await sleep(ttl + 10);
@@ -123,7 +128,7 @@ describe('Cached decorator test suite', () => {
 	test('Cached method should use argument options if "useArgumentOptions" provided in decorator options', async () => {
 		const ttl = 50;
 		const testService = await app.resolve(TestService);
-		const cacheKey = `${TestService.name}.getRandomNumberWithOptions`;
+		const cacheKey = wrapCacheKey(`${TestService.name}.getRandomNumberWithOptions`);
 		testService.getRandomNumberWithOptions({ ttl });
 
 		await sleep(ttl + 10);
@@ -161,7 +166,7 @@ describe('Cached decorator test suite', () => {
 		const a = 5;
 		const b = 5;
 		const testService = await app.resolve(TestService);
-		const cacheKey = `${TestService.name}.addHashFunctionOverload:${a}_${b}`;
+		const cacheKey = wrapCacheKey(`${TestService.name}.addHashFunctionOverload:${a}_${b}`);
 		testService.addHashFunctionOverload(a, b);
 
 		expect(cache.get(cacheKey)).toBe(a + b);
@@ -169,7 +174,7 @@ describe('Cached decorator test suite', () => {
 
 	test('Cached method should use TTL overload in decorator options', async () => {
 		const testService = await app.resolve(TestService);
-		const cacheKey = `${TestService.name}.getRandomNumberTtlOverload`;
+		const cacheKey = wrapCacheKey(`${TestService.name}.getRandomNumberTtlOverload`);
 		const val = testService.getRandomNumberTtlOverload();
 		expect(cache.get(cacheKey)).toBe(val);
 
@@ -181,7 +186,7 @@ describe('Cached decorator test suite', () => {
 		const a = 5;
 		const b = 5;
 		const testService = await app.resolve(TestService);
-		const cacheKey = `${TestService.name}.addHashFunctionOptions:${a}_${b}`;
+		const cacheKey = wrapCacheKey(`${TestService.name}.addHashFunctionOptions:${a}_${b}`);
 		testService.addHashFunctionOptions(a, b);
 
 		expect(cache.get(cacheKey)).toBe(a + b);
