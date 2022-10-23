@@ -1,6 +1,6 @@
 {
 	"name": "nestjs-ttl-cache",
-	"version": "0.0.0",
+	"version": "0.0.1",
 	"description": "NestJS TTL memory cache module.",
 	"publishConfig": {
 		"access": "public"
