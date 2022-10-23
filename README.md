@@ -4,28 +4,11 @@
 
 ### Table of Contents
 
--   [Instalation](#installation)
+-   [Installation](#installation)
 -   [Introduction](#introduction)
 -   [General Usage](#general-usage)
 -   [Options](#options)
-    -   [max](#max)
-    -   [ttl](#ttl)
-    -   [updateAgeOnGet](#updateageonget)
-    -   [noUpdateTTL](#noupdatettl)
-    -   [dispose](#dispose)
-    -   [noDisposeOnSet](#nodisposeonset)
 -   [API](#api)
-    -   [size](#size)
-    -   [has](#haskey)
-    -   [get](#getkey--updateageonget-ttl-)
-    -   [set](#setkey-value-ttl)
-    -   [getRemainingTTL](#getremainingttlkey)
-    -   [delete](#deletekey)
-    -   [clear](#clear)
-    -   [keys](#keys)
-    -   [values](#values)
-    -   [entries](#entries)
-    -   [Symbol.Iterator](#symboliterator)
 -   [Decorators](#decorators)
     -   [@Cacheable](#cacheable)
     -   [@Cached](#cached)
@@ -33,6 +16,7 @@
     -   [@CachedAsync](#cachedasync)
         -   [@CachedAsync Options](#cachedasync-options)
     -   [Argument Options](#argument-options)
+-   [Support](#support)
 
 ## Installation
 
@@ -360,7 +344,7 @@ export class AnyCustomProvider {
 }
 ```
 
-The decorators internally generate a cache key of the following pattern: `<className><?_instanceId>.<methodName><?:hashFunctionResult>` (`?` indicates optional part). So in the example above, the generated cache key will look like this: `AnyCustomProvider.getRandomNumber`.
+The decorators internally generate a cache key of the following pattern: `__<className><?_instanceId>.<methodName><?:hashFunctionResult>__` (`?` indicates optional part). So in the example above, the generated cache key will look like this: `__AnyCustomProvider.getRandomNumber__`.
 
 ```ts
 // With @Cached() decorator:
@@ -392,7 +376,7 @@ export class AnyCustomProvider {
 }
 ```
 
-The `@Cacheable` decorator assigns the unique identifier for each created instance. Thus, `@Cached` and `@CachedAsync` decorators can use it to generate unique cache keys, for example: `AnyCustomProvider_1.getRandomNumber`, `AnyCustomProvider_2.getRandomNumber`, and so on.
+The `@Cacheable` decorator assigns the unique identifier for each created instance. Thus, `@Cached` and `@CachedAsync` decorators can use it to generate unique cache keys, for example: `__AnyCustomProvider_1.getRandomNumber__`, `__AnyCustomProvider_2.getRandomNumber__`, and so on.
 
 ```ts
 // With @Cacheable()
@@ -426,7 +410,7 @@ If you're happy with different instances sharing the same cache, then don't appl
 
 The `@Cached` decorator can be used to apply automatic caching logic to _synchronous_ methods and getters. To decorate asynchronous methods use [@CachedAsync](#cachedasync) decorator instead.
 
-The `@Cached` decorator also allows you to set the TTL at the decorated method level, which will override the default value specified in the module [options](#options). To set TTL, you can pass the number of milliseconds as the first argument to the decorated method.
+The `@Cached` decorator also allows you to set the TTL at the decorated method level, which will override the default value specified in the module [options](#options). To set TTL, you can pass the number of milliseconds as the first argument to the decorator itself.
 
 ```ts
 import { Injectable } from '@nestjs/common';
@@ -456,7 +440,7 @@ export class UsersService {
 }
 ```
 
-The resulting string will be appended to the cache key: `UsersService.getUserById:123456789`.
+The resulting string will be appended to the cache key: `__UsersService.getUserById:123456789__`.
 
 In this way you can stringify any data structure in the function, for example a plain object:
 
@@ -481,7 +465,7 @@ export class UsersService {
 }
 ```
 
-The resulting cache key will look something like this: `UsersService.getUsers:manager_online_false`.
+The resulting cache key will look something like this: `__UsersService.getUsers:manager_online_false__`.
 
 > **NOTE:** You're better off not using `JSON.stringify()` to convert objects to strings. If two identical objects with the same properties and values are passed with a different order of properties, this will generate different keys, for example, `{"key":1,"val":1}` and `{"val":1,"key":1}`.
 
@@ -601,7 +585,7 @@ This behavior can be useful to call rate-limited third-party APIs to avoid wasti
 
 After expiration (5000 ms in the example) the promise will be deleted from the cache, so the next call will return a new promise.
 
-The result of the promise is also caching for the specified TTL. For example, if you set the TTL value to `5000` ms and the promise resolves after `2000` ms, then the result of the promise will be cached, resetting the TTL back to `5000` ms. You can disable TTL update providing `noUpdateTTL: true` to the `@CachedAsync` options object, so the result of the promise will be cached for the remaining `3000` ms.
+The result of the promise is also caching for the specified TTL. For example, if you set the TTL value to 5000 ms and the promise resolves after 2000 ms, then the result of the promise will be cached, resetting the TTL back to 5000 ms. You can disable TTL update providing `noUpdateTTL: true` to the `@CachedAsync` options object, so the result of the promise will be cached for the remaining 3000 ms.
 
 ### @CachedAsync Options
 
@@ -684,3 +668,7 @@ anyCustomProvider.getRandomNumber();
 anyCustomProvider.getRandomNumber({ returnCached: false });
 // ->  0.24774185142387612
 ```
+
+## Support
+
+If you run into problems, or you have suggestions for improvements, please submit a new [issue](https://github.com/StimulCross/nestjs-ttl-cache/issues) 🙃
