@@ -2,7 +2,7 @@ import { Test } from '@nestjs/testing';
 import type { NestApplication } from '@nestjs/core';
 import type * as TTLCache from '@isaacs/ttlcache';
 import type { INestApplication } from '@nestjs/common';
-import { TTL_CACHE, TTL_CACHE_OPTIONS } from '../src/ttl-cache.constants';
+import { TTL_CACHE, TTL_CACHE_OPTIONS } from '../src/constants';
 import { TtlCacheModule } from '../src/ttl-cache.module';
 import type { TtlCacheOptions } from '../src/interfaces/ttl-cache-options.interface';
 import { TtlCacheOptionsFactoryModule } from './test-app/ttl-cache-options-factory/ttl-cache-options-factory.module';

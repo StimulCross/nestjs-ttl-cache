@@ -7,7 +7,7 @@ import type {
 	TtlCacheOptionsFactory,
 	TtlCacheOptions
 } from './interfaces/ttl-cache-options.interface';
-import { TTL_CACHE, TTL_CACHE_OPTIONS } from './ttl-cache.constants';
+import { TTL_CACHE, TTL_CACHE_OPTIONS } from './constants';
 import { TtlCache } from './providers/ttl-cache';
 
 /**

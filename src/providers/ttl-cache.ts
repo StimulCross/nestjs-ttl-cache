@@ -1,7 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import type { GetOptions, SetOptions } from '@isaacs/ttlcache';
 import * as TTLCache from '@isaacs/ttlcache';
-import { TTL_CACHE } from '../ttl-cache.constants';
+import { TTL_CACHE } from '../constants';
 
 /**
  * TTL cache service.

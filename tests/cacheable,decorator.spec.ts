@@ -1,6 +1,6 @@
 import type { NestApplication } from '@nestjs/core';
 import { Test } from '@nestjs/testing';
-import { CACHE_INSTANCE, CACHE_INSTANCE_ID_PROPERTY, CACHE_INSTANCES_PROPERTY } from '../src/ttl-cache.constants';
+import { CACHE_INSTANCE, CACHE_INSTANCE_ID_PROPERTY, CACHE_INSTANCES_PROPERTY } from '../src/constants';
 import { TtlCacheModule } from '../src/ttl-cache.module';
 import { CacheableTestService } from './test-app/cacheable-test.service';
 

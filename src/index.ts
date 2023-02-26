@@ -1,4 +1,4 @@
-export { TTL_CACHE } from './ttl-cache.constants';
+export { TTL_CACHE } from './constants';
 export {
 	TtlCacheOptions,
 	TtlCacheAsyncModuleOptions,

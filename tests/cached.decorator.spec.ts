@@ -1,6 +1,6 @@
 import { Test } from '@nestjs/testing';
 import type { NestApplication } from '@nestjs/core';
-import { CACHE_INSTANCE_ID_PROPERTY } from '../src/ttl-cache.constants';
+import { CACHE_INSTANCE_ID_PROPERTY } from '../src/constants';
 import { TtlCacheModule } from '../src/ttl-cache.module';
 import { TtlCache } from '../src/providers/ttl-cache';
 import { wrapCacheKey } from '../src/utils/wrap-cache-key';
