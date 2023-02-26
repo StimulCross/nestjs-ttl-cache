@@ -1,10 +1,10 @@
+import type { GetOptions, SetOptions } from '@isaacs/ttlcache';
+
 /**
  * Options for {@link CachedAsync} decorator.
  *
  * These options will override similar options in {@link TtlCacheOptions} for specific async method.
  */
-import type { GetOptions, SetOptions } from '@isaacs/ttlcache';
-
 export interface CachedAsyncDecoratorOptions extends GetOptions, SetOptions {
 	/**
 	 * Custom hash function.
