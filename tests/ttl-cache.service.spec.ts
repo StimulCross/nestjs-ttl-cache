@@ -1,8 +1,7 @@
+import { type NestApplication } from '@nestjs/core';
 import { Test } from '@nestjs/testing';
-import type { NestApplication } from '@nestjs/core';
-import { TtlCacheModule } from '../src';
-import { TtlCache } from '../src/providers/ttl-cache';
 import { sleep } from './test-app/utils/sleep';
+import { TtlCacheModule, TtlCache } from '../src';
 
 describe('TTL cache provider test suite', () => {
 	let app: NestApplication;

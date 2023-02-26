@@ -1,13 +1,13 @@
 export { TTL_CACHE } from './constants';
 export {
-	TtlCacheOptions,
-	TtlCacheAsyncModuleOptions,
-	TtlCacheModuleOptions,
-	TtlCacheOptionsFactory
+	type TtlCacheOptions,
+	type TtlCacheAsyncModuleOptions,
+	type TtlCacheModuleOptions,
+	type TtlCacheOptionsFactory
 } from './interfaces/ttl-cache-options.interface';
-export { CachedDecoratorOptions } from './interfaces/cached-decorator-options.interface';
-export { CachedAsyncDecoratorOptions } from './interfaces/cached-async-decorator-options.interface';
-export { CacheArgumentOptions } from './interfaces/cache-argument-options.interface';
+export { type CachedDecoratorOptions } from './interfaces/cached-decorator-options.interface';
+export { type CachedAsyncDecoratorOptions } from './interfaces/cached-async-decorator-options.interface';
+export { type CacheArgumentOptions } from './interfaces/cache-argument-options.interface';
 export { Cacheable } from './decorators/cacheable.decorator';
 export { Cached } from './decorators/cached.decorator';
 export { CachedAsync } from './decorators/cached-async.decorator';

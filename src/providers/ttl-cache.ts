@@ -1,6 +1,6 @@
-import { Inject, Injectable } from '@nestjs/common';
-import type { GetOptions, SetOptions } from '@isaacs/ttlcache';
+import { type GetOptions, type SetOptions } from '@isaacs/ttlcache';
 import * as TTLCache from '@isaacs/ttlcache';
+import { Inject, Injectable } from '@nestjs/common';
 import { TTL_CACHE } from '../constants';
 
 /**

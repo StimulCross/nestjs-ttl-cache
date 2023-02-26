@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import type { TtlCacheOptionsFactory, TtlCacheOptions } from '../../../src/interfaces/ttl-cache-options.interface';
+import { type TtlCacheOptionsFactory, type TtlCacheOptions } from '../../../src';
 
 @Injectable()
 export class TtlCacheFactory implements TtlCacheOptionsFactory {

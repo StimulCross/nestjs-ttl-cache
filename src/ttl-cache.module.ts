@@ -1,13 +1,12 @@
-import type { DynamicModule, Provider } from '@nestjs/common';
-import { Module } from '@nestjs/common';
 import * as TTLCache from '@isaacs/ttlcache';
-import type {
-	TtlCacheAsyncModuleOptions,
-	TtlCacheModuleOptions,
-	TtlCacheOptionsFactory,
-	TtlCacheOptions
-} from './interfaces/ttl-cache-options.interface';
+import { Module, type DynamicModule, type Provider } from '@nestjs/common';
 import { TTL_CACHE, TTL_CACHE_OPTIONS } from './constants';
+import {
+	type TtlCacheAsyncModuleOptions,
+	type TtlCacheModuleOptions,
+	type TtlCacheOptionsFactory,
+	type TtlCacheOptions
+} from './interfaces/ttl-cache-options.interface';
 import { TtlCache } from './providers/ttl-cache';
 
 /**

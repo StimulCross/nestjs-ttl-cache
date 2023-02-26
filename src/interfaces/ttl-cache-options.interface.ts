@@ -1,5 +1,5 @@
-import type { Options } from '@isaacs/ttlcache';
-import type { ModuleMetadata, Type } from '@nestjs/common';
+import { type Options } from '@isaacs/ttlcache';
+import { type ModuleMetadata, type Type } from '@nestjs/common';
 
 /**
  * Addition module options.

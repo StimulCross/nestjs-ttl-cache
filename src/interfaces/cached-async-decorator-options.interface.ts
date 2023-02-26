@@ -1,4 +1,4 @@
-import type { GetOptions, SetOptions } from '@isaacs/ttlcache';
+import { type GetOptions, type SetOptions } from '@isaacs/ttlcache';
 
 /**
  * Options for {@link CachedAsync} decorator.
