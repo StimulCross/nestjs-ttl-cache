@@ -12,7 +12,10 @@ function createCachedFunction(
 	origFn: Function,
 	options: CachedDecoratorOptions
 ) {
-	return function (this: { [CACHE_INSTANCE_ID_PROPERTY]?: number; [CACHE_INSTANCE]: TtlCache }, ...args: unknown[]) {
+	return function (
+		this: { [CACHE_INSTANCE_ID_PROPERTY]?: number; [CACHE_INSTANCE]: TtlCache<unknown, unknown> },
+		...args: unknown[]
+	) {
 		const cacheInstanceId = this[CACHE_INSTANCE_ID_PROPERTY] ? `_${this[CACHE_INSTANCE_ID_PROPERTY]}` : '';
 		let cacheOptionsArg: CacheArgumentOptions | undefined;
 
