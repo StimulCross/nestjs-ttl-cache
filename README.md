@@ -16,6 +16,8 @@
     -   [@CachedAsync](#cachedasync)
         -   [@CachedAsync Options](#cachedasync-options)
     -   [Argument Options](#argument-options)
+-   [Tests](#tests)
+    -   [Coverage](#coverage)
 -   [Support](#support)
 
 ## Installation
@@ -534,6 +536,46 @@ anyCustomProvider.getRandomNumber();
 // the cached value and get a new one:
 anyCustomProvider.getRandomNumber({ returnCached: false });
 // ->  0.24774185142387612
+```
+
+## Tests
+
+Available test commands: `test`, `test:verbose`, `test:cov`, `test:cov:verbose`.
+
+### Coverage
+
+`test:cov` output:
+
+```
+ PASS  tests/ttl-cache-module.spec.ts
+ PASS  tests/cached-async.decorator.spec.ts
+ PASS  tests/cached.decorator.spec.ts
+ PASS  tests/ttl-cache.spec.ts
+ PASS  tests/cacheable,decorator.spec.ts
+----------------------------|---------|----------|---------|---------|-------------------
+File                        | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
+----------------------------|---------|----------|---------|---------|-------------------
+All files                   |     100 |      100 |     100 |     100 |
+ src                        |     100 |      100 |     100 |     100 |
+  constants.ts              |     100 |      100 |     100 |     100 |
+  ttl-cache.module.ts       |     100 |      100 |     100 |     100 |
+ src/decorators             |     100 |      100 |     100 |     100 |
+  cacheable.decorator.ts    |     100 |      100 |     100 |     100 |
+  cached-async.decorator.ts |     100 |      100 |     100 |     100 |
+  cached.decorator.ts       |     100 |      100 |     100 |     100 |
+ src/providers              |     100 |      100 |     100 |     100 |
+  ttl-cache.ts              |     100 |      100 |     100 |     100 |
+ src/utils                  |     100 |      100 |     100 |     100 |
+  is-object.ts              |     100 |      100 |     100 |     100 |
+  wrap-cache-key.ts         |     100 |      100 |     100 |     100 |
+----------------------------|---------|----------|---------|---------|-------------------
+
+Test Suites: 5 passed, 5 total
+Tests:       71 passed, 71 total
+Snapshots:   0 total
+Time:        5.225 s, estimated 12 s
+Ran all test suites.
+Done in 5.87s.
 ```
 
 ## Support
