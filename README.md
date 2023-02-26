@@ -1,6 +1,6 @@
 # NestJS TTL Cache
 
-> **WARNING:** Although this library has been automatically (100% covered) and manually tested, it may still have fundamental design issues. Use it at your own risk.
+> **WARNING:** Although this library has been automatically (100% covered) and manually tested, it may still have fundamental design issues.
 
 ### Table of Contents
 
@@ -46,7 +46,7 @@ It's highly recommended to set both `ttl` and `max` options on module level to a
 
 Although it is possible to set `Infinity` as TTL value for a cache entry, it is not recommended to create immortal entries. If you need a persistent storage, consider using `Map` or plain object instead. Read the caveat from the original maintainer [here](https://github.com/isaacs/ttlcache#immortality-hazards).
 
-You can also consider using [nestjs-lru-cache](https://github.com/stimulcross/nestjs-lru-cache) - a NestJS wrapper for [lru-cache](https://github.com/isaacs/node-lru-cache) library that implements LRU cache.
+You can also consider using [nestjs-lru-cache](https://github.com/stimulcross/nestjs-lru-cache) - a NestJS wrapper for [lru-cache](https://github.com/isaacs/node-lru-cache) library that implements LRU caching.
 
 ## General Usage
 
@@ -154,19 +154,6 @@ export class AnyCustomProvider {
 }
 ```
 
-You can also inject the **original** cache instance provided by [@isaacs/ttlcache](https://github.com/isaacs/ttlcache) library using `TTL_CACHE` token:
-
-```ts
-import { Inject, Injectable } from '@nestjs/common';
-import { TTL_CACHE } from 'nestjs-ttl-cache';
-import * as TTLCache from '@isaacs/ttlcache';
-
-@Injectable()
-export class AnyCustomProvider {
-	constructor(@Inject(TTL_CACHE) private readonly _cache: TTLCache) {}
-}
-```
-
 See [API](#api) section below for the cache usage information.
 
 ### Options
@@ -182,38 +169,7 @@ interface TtlCacheOptions<K = any, V = any> {
 }
 ```
 
-Either `register` or `registerAsync` (its factories) should provide the following cache options:
-
-### `max`
-
-The max number of items to keep in the cache. Must be positive integer or Infinity, defaults to Infinity (ie, limited only by TTL, not by item count).
-
-### `ttl`
-
-The max time in milliseconds to store items. Overridable on the decorator options, argument options, or `set()` method. Must be a positive integer or `Infinity` (see note about [immortality hazards](https://github.com/isaacs/ttlcache#immortality-hazards)). If it is not set in the module options, then a TTL _must_ be provided in decorator options, argument options, or in each `set()` call.
-
-### `updateAgeOnGet`
-
-Should the age of an item be updated when it is retrieved? Defaults to `false`. Overridable on the decorator options, argument options, or `get()` method.
-
-### `noUpdateTTL`
-
-Should setting a new value for an existing key leave the TTL unchanged? Defaults to `false`. Overridable on the decorator options, argument options, or `set()` method. (Note that TTL is always updated if the item is expired, since that is treated as a new `set()` and the old item is no longer relevant.)
-
-### `dispose`
-
-Method called with (value, key, reason) when an item is removed from the cache. Called once item is fully removed from cache. It is safe to re-add at this point, but note that adding when reason is `set` can result in infinite recursion if `noDisponseOnSet` is not specified.
-
-Disposal reasons:
-
--   `'stale'` - TTL expired.
--   `'set'` - Overwritten with a new different value.
--   `'evict'` - Removed from the cache to stay within capacity limit.
--   `'delete'` - Explicitly deleted with `delete()` or `clear()`
-
-### `noDisposeOnSet`
-
-Do not call `dispose()` method when overwriting a key with a new value. Defaults to false. Overridable on the decorator options, argument options, or `set()` method.
+> **TIP:** Read the detailed description of each option in the original [@isaacs/ttlcache repository](https://github.com/isaacs/ttlcache#new-ttlcache-ttl-max--infinty-updateageonget--false-noupdatettl--false-nodisposeonset--false-).
 
 ### API
 
@@ -224,108 +180,19 @@ interface TtlCache<K = any, V = any> {
 	readonly size: number;
 
 	has(key: K): boolean;
-
 	get<T = unknown>(key: K, options?: GetOptions): T | undefined;
-
 	set(key: K, value: V, ttl?: number): this;
-
 	set(key: K, value: V, options?: SetOptions): this;
-
 	delete(key: K): boolean;
-
 	clear(): void;
-
 	entries(): Generator<[K, V]>;
-
 	keys(): Generator<K>;
-
 	values(): Generator<V>;
-
 	[Symbol.iterator](): Iterator<[K, V]>;
 }
 ```
 
-### `size`
-
-The number of items in the cache.
-
-### `has(key)`
-
-Checks whether the key is in the cache. Returns boolean.
-
-### `get(key, { updateAgeOnGet, ttl })`
-
-Gets an item stored in the cache. Returns `undefined` if the item is not in the cache (including if it has expired and been purged).
-
-If `updateAgeOnGet` is `true`, then re-add the item into the cache with the updated ttl value. Both options default to the settings specified in module [options](#options).
-
-Note that using `updateAgeOnGet` can effectively simulate a "least-recently-used" type of algorithm, by repeatedly updating the TTL of items as they are used. However, if you find yourself doing this, consider using [nestjs-lru-cache](https://github.com/stimulcross/nestjs-lru-cache), as it is much more optimized for an LRU use case.
-
-### `set(key, value, ttl)`
-
-### `set(key, value, { ttl, noUpdateTTL, noDisposeOnSet })`
-
-Set a value to the cache for the specified time.
-
-`ttl` and `noUpdateTTL` optionally override defaults on the module [options](#options).
-
-Returns the cache object itself.
-
-### `getRemainingTTL(key)`
-
-Returns the remaining time before an item expires. Returns `0` if the item is not found in the cache or is already expired.
-
-### `delete(key)`
-
-Deletes the item from the cache.
-
-### `clear()`
-
-Deletes all items from the cache.
-
-### `keys()`
-
-Returns an iterator that walks through each key from soonest expiring to latest expiring.
-
-```ts
-for (const key of cacheService.keys()) {
-	// ...
-}
-```
-
-### `values()`
-
-Returns an iterator that walks through each value from soonest expiring to latest expiring.
-
-```ts
-for (const key of cacheService.values()) {
-	// ...
-}
-```
-
-### `entries()`
-
-Returns an iterator that walks through each `[key, value]` from soonest expiring to latest expiring. (Items expiring at the same time are walked in insertion order.)
-
-This is the default iteration method for the TtlCache itself.
-
-```ts
-for (const [key, value] of cacheService.entries()) {
-	// ...
-}
-```
-
-### `Symbol.iterator`
-
-The cache service supports iterations over itself.
-
-```ts
-for (const [key, value] of cacheService) {
-	// ...
-}
-```
-
-> **NOTE:** The iterators do not yield immortal entries set with `Infinity` TTL.
+> **TIP:** Read the detailed description of the API in the original [@isaacs/ttlcache repository](https://github.com/isaacs/ttlcache#cachesize).
 
 ## Decorators
 
@@ -353,7 +220,7 @@ anyCustomProvider.getRandomNumber(); // -> 0.06753652490209194
 
 // Without @Cached() decorator:
 anyCustomProvider.getRandomNumber(); // -> 0.24774185142387684
-anyCustomProvider.getRandomNumber(); // -> 0.7533487702318598
+anyCustomProvider.getRandomNumber(); // -> 0.75334877023185987
 ```
 
 This will work as expected if you have the single instance of the class. But if you have multiple instances of the same class (e.g. `TRANSIENT` or `REQUEST` scoped), **they will use the shared cache by default**. In order to separate them, you need to apply the `@Cacheable` decorator on the class.
@@ -492,12 +359,12 @@ The `@Cached` decorator can accept options object as the first argument instead 
 -   `hashFunction` - A function that accepts the same parameters as the decorated method and returns a string that will be appended to the generated cache key. You can specify it as the first argument or use this property in the options object.
 -   `useSharedCache` - Whether the decorated method should use shared cache across multiple class instances, even if the class is decorated with `@Cacheable` decorator. Defaults to `false`.
 -   `useArgumentOptions` - Makes the decorator use [argument options](#argument-options) passed as the last argument to the decorated method to control caching behavior for a single method call. See below for more information. Defaults to `false`.
--   `ttl` - The max time in milliseconds to store items of the decorated method.
+-   `ttl` - The max time in milliseconds to store entries of the decorated method.
 -   `noDisposeOnSet` - Whether the `dispose()` function should be called if the entry key is still accessible within the cache.
--   `noUpdateTTL` - Whether to not update the TTL when overwriting an existing item.
--   `updateAgeOnGet` - Whether the age of an item should be updated on retrieving.
+-   `noUpdateTTL` - Whether to not update the TTL when overwriting an existing entry.
+-   `updateAgeOnGet` - Whether the age of an entry should be updated on retrieving.
 
-The example below shows how you can apply some cache options at theCachedAsync method level.
+The example below shows how you can apply some cache options at the `CachedAsync` method level.
 
 ```ts
 import { Injectable } from '@nestjs/common';
@@ -572,7 +439,7 @@ anyCustomProvider.getRandomNumberAsync(); // -> Promise { 0.24774185142387612 }
 anyCustomProvider.getRandomNumberAsync(); // -> Promise { 0.24774185142387612 }
 
 // Without @CachedAsync() decorator
-// Not awaited calls return new promises for each call.
+// Not awaited calls return a new promise for each call.
 anyCustomProvider.getRandomNumberAsync(); // -> Promise { 0.01035534046752562 }
 anyCustomProvider.getRandomNumberAsync(); // -> Promise { 0.19166009286482677 }
 anyCustomProvider.getRandomNumberAsync(); // -> Promise { 0.04037471223786249 }
@@ -627,10 +494,10 @@ Some options listed below override similar [options](#cached-options) in the dec
 
 -   `returnCached` - Whether to return the cached value. If set to `false`, the original method will be called even if the cached result is available in the cache. The new value replaces the cached one as usual. Defaults to `true`.
 -   `useSharedCache` - Whether a specific method call should use the shared cache across multiple class instances, even if [@Cacheable](#cacheable) decorator has been applied to the class. Defaults to the value specified in the [@Cached decorator options](#cached-options).
--   `ttl` - The max time in milliseconds to store items of the decorated method.
+-   `ttl` - The max time in milliseconds to store entries of the decorated method.
 -   `noDisposeOnSet` - Whether the `dispose()` function should be called if the entry key is still accessible within the cache.
--   `noUpdateTTL` - Whether to not update the TTL when overwriting an existing item.
--   `updateAgeOnGet` - Whether the age of an item should be updated on retrieving.
+-   `noUpdateTTL` - Whether to not update the TTL when overwriting an existing entry.
+-   `updateAgeOnGet` - Whether the age of an entry should be updated on retrieving.
 
 To be able to use argument options, you _must_ set `useArgumentOptions` to `true` in the decorator options. Otherwise, they will be ignored.
 
@@ -641,12 +508,12 @@ import { Cached, CacheArgumentOptions, CachedAsyncArgumentOptions } from 'nestjs
 @Injectable()
 export class AnyCustomProvider {
 	@Cached({ ttl: 5000, useArgumentOptions: true })
-	public getRandomNumber(options?: CacheArgumentOptions): number {
+	public getRandomNumber(_options?: CacheArgumentOptions): number {
 		return Math.random();
 	}
 
 	@CachedAsync({ ttl: 5000, useArgumentOptions: true })
-	public async getUserById(id: number, options?: CachedAsyncArgumentOptions): Promise<User> {
+	public async getUserById(id: number, _options?: CachedAsyncArgumentOptions): Promise<User> {
 		// ...
 	}
 }
@@ -663,7 +530,7 @@ anyCustomProvider.getRandomNumber();
 anyCustomProvider.getRandomNumber();
 // ->  0.19166009286482677
 
-// And you can pass `returnCached` option to ignore
+// And you can pass `returnCached: false` to ignore
 // the cached value and get a new one:
 anyCustomProvider.getRandomNumber({ returnCached: false });
 // ->  0.24774185142387612
