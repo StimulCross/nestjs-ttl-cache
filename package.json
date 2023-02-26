@@ -5,20 +5,21 @@
 	"publishConfig": {
 		"access": "public"
 	},
-	"main": "./dist/index.js",
-	"types": "./dist/index.d.ts",
+	"main": "./lib/index.js",
+	"types": "./lib/index.d.ts",
 	"repository": "git@github.com:StimulCross/nestjs-ttl-cache.git",
 	"author": "Stimul Cross <stimulcross@gmail.com>",
 	"license": "MIT",
 	"files": [
-		"dist",
 		"README.md",
-		"LICENSE"
+		"LICENSE",
+		"lib",
+		"!lib/**/*.d.ts.map"
 	],
 	"scripts": {
 		"build": "tsc -p ./tsconfig.build.json",
 		"rebuild": "yarn clear && yarn build",
-		"clear": "rimraf dist",
+		"clear": "rimraf lib",
 		"lint": "eslint --ext js,ts .",
 		"lint:fix": "eslint --ext js,ts . --fix",
 		"format:check": "prettier --check \"**/*.{ts,md,js,mjs,json}\"",
