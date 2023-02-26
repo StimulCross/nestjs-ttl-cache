@@ -1,12 +1,5 @@
-/**
- * Allows you to inject the original TTL cache instance using NestJS @Inject() decorator.
- *
- * @see https://github.com/isaacs/ttlcache
- */
-export const TTL_CACHE = 'TtlCacheToken';
-
 /** @internal */
-export const TTL_CACHE_OPTIONS = 'TtlCacheOptionsToken';
+export const TTL_CACHE_OPTIONS = 'TTL_CACHE:OPTIONS';
 
 /** @internal */
 export const CACHE_INSTANCES_PROPERTY = '__cache_instances__';

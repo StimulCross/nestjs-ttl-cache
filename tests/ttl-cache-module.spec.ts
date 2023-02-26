@@ -1,11 +1,10 @@
-import type * as TTLCache from '@isaacs/ttlcache';
 import { type INestApplication } from '@nestjs/common';
 import { type NestApplication } from '@nestjs/core';
 import { Test } from '@nestjs/testing';
 import { TtlCacheFactory } from './test-app/ttl-cache-options-factory/ttl-cache-options-factory';
 import { TtlCacheOptionsFactoryModule } from './test-app/ttl-cache-options-factory/ttl-cache-options-factory.module';
-import { TtlCacheModule, type TtlCacheOptions } from '../src';
-import { TTL_CACHE, TTL_CACHE_OPTIONS } from '../src/constants';
+import { TtlCache, TtlCacheModule, type TtlCacheOptions } from '../src';
+import { TTL_CACHE_OPTIONS } from '../src/constants';
 
 describe('TTL cache module test suite', () => {
 	describe('TTL cache options', () => {
@@ -36,7 +35,7 @@ describe('TTL cache module test suite', () => {
 		});
 
 		test('TTL cache instance should be defined', async () => {
-			const ttlCache = app.get<TTLCache<unknown, unknown>>(TTL_CACHE);
+			const ttlCache = app.get(TtlCache);
 			expect(ttlCache).toBeDefined();
 			expect(ttlCache).toHaveProperty('get');
 			expect(ttlCache).toHaveProperty('set');
@@ -71,7 +70,7 @@ describe('TTL cache module test suite', () => {
 		});
 
 		test('TTL cache instance should be defined', async () => {
-			const ttlCache = app.get<TTLCache<unknown, unknown>>(TTL_CACHE);
+			const ttlCache = app.get(TtlCache);
 			expect(ttlCache).toBeDefined();
 			expect(ttlCache).toHaveProperty('get');
 			expect(ttlCache).toHaveProperty('set');
@@ -93,7 +92,7 @@ describe('TTL cache module test suite', () => {
 			expect(ttlCacheOptions.max).toBe(max);
 			expect(ttlCacheOptions.ttl).toBe(ttl);
 
-			const ttlCache = app.get<TTLCache<unknown, unknown>>(TTL_CACHE);
+			const ttlCache = app.get(TtlCache);
 			expect(ttlCache).toBeDefined();
 			expect(ttlCache).toHaveProperty('get');
 			expect(ttlCache).toHaveProperty('set');

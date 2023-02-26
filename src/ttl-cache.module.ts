@@ -1,6 +1,5 @@
-import * as TTLCache from '@isaacs/ttlcache';
 import { type DynamicModule, Module, type Provider } from '@nestjs/common';
-import { TTL_CACHE, TTL_CACHE_OPTIONS } from './constants';
+import { TTL_CACHE_OPTIONS } from './constants';
 import {
 	type TtlCacheAsyncModuleOptions,
 	type TtlCacheModuleOptions,
@@ -29,16 +28,11 @@ export class TtlCacheModule {
 			useValue: options
 		};
 
-		const ttlCacheProvider: Provider<TTLCache<any, any>> = {
-			provide: TTL_CACHE,
-			useValue: new TTLCache(options)
-		};
-
 		return {
 			global: options.isGlobal,
 			module: TtlCacheModule,
-			providers: [optionsProvider, ttlCacheProvider, TtlCache],
-			exports: [ttlCacheProvider, TtlCache]
+			providers: [optionsProvider, TtlCache],
+			exports: [TtlCache]
 		};
 	}
 
@@ -50,18 +44,12 @@ export class TtlCacheModule {
 	 * @param options TTL cache async options.
 	 */
 	public static async registerAsync(options: TtlCacheAsyncModuleOptions): Promise<DynamicModule> {
-		const ttlCacheProvider: Provider<TTLCache<any, any>> = {
-			provide: TTL_CACHE,
-			useFactory: (opts: TtlCacheOptions) => new TTLCache(opts),
-			inject: [TTL_CACHE_OPTIONS]
-		};
-
 		return {
 			global: options.isGlobal,
 			imports: options.imports ?? [],
 			module: TtlCacheModule,
-			providers: [...TtlCacheModule._createOptionsProviders(options), ttlCacheProvider, TtlCache],
-			exports: [ttlCacheProvider, TtlCache]
+			providers: [...TtlCacheModule._createOptionsProviders(options), TtlCache],
+			exports: [TtlCache]
 		};
 	}
 
