@@ -11,7 +11,7 @@ import { TtlCacheOptions } from '../interfaces';
  */
 @Injectable()
 export class TtlCache<K = any, V = any> extends TTLCache<K, V> {
-	constructor(@Inject(TTL_CACHE_OPTIONS) protected readonly _options: TtlCacheOptions) {
+	constructor(@Inject(TTL_CACHE_OPTIONS) private readonly _options: TtlCacheOptions) {
 		super(_options);
 	}
 
