@@ -3,10 +3,10 @@ import { Module, type DynamicModule, type Provider } from '@nestjs/common';
 import { TTL_CACHE, TTL_CACHE_OPTIONS } from './constants';
 import {
 	type TtlCacheAsyncModuleOptions,
-	type TtlCacheModuleOptions,
-	type TtlCacheOptionsFactory,
-	type TtlCacheOptions
-} from './interfaces/ttl-cache-options.interface';
+	type TtlCacheModuleOptions
+} from './interfaces/ttl-cache-module-options.interface';
+import { type TtlCacheOptionsFactory } from './interfaces/ttl-cache-options-factory.interface';
+import { type TtlCacheOptions } from './interfaces/ttl-cache-options.interface';
 import { TtlCache } from './providers/ttl-cache';
 
 /**
