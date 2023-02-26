@@ -6,6 +6,20 @@ import { TtlCacheOptionsFactoryModule } from './test-app/ttl-cache-options-facto
 import { TtlCache, TtlCacheModule, type TtlCacheOptions } from '../src';
 import { TTL_CACHE_OPTIONS } from '../src/constants';
 
+const testCacheOptions = (options: TtlCacheOptions, max?: number, ttl?: number): void => {
+	expect(options).toBeDefined();
+	expect(options.max).toBe(max);
+	expect(options.ttl).toBe(ttl);
+};
+
+const testCacheProvider = (ttlCache: TtlCache): void => {
+	expect(ttlCache).toBeDefined();
+	expect(ttlCache).toHaveProperty('get');
+	expect(ttlCache).toHaveProperty('set');
+	expect(ttlCache).toHaveProperty('has');
+	expect(ttlCache).toHaveProperty('delete');
+};
+
 describe('TTL cache module test suite', () => {
 	describe('TTL cache options', () => {
 		let app: NestApplication;
@@ -20,27 +34,14 @@ describe('TTL cache module test suite', () => {
 			app = TestingModule.createNestApplication();
 
 			await app.init();
-			await app.listen(3000);
 		});
 
-		afterAll(async () => {
-			await app.close();
+		test('TTL cache options should be defined', () => {
+			testCacheOptions(app.get<TtlCacheOptions>(TTL_CACHE_OPTIONS), max, ttl);
 		});
 
-		test('TTL cache options should be defined', async () => {
-			const ttlCache = app.get<TtlCacheOptions>(TTL_CACHE_OPTIONS);
-			expect(ttlCache).toBeDefined();
-			expect(ttlCache.max).toBe(max);
-			expect(ttlCache.ttl).toBe(ttl);
-		});
-
-		test('TTL cache instance should be defined', async () => {
-			const ttlCache = app.get(TtlCache);
-			expect(ttlCache).toBeDefined();
-			expect(ttlCache).toHaveProperty('get');
-			expect(ttlCache).toHaveProperty('set');
-			expect(ttlCache).toHaveProperty('has');
-			expect(ttlCache).toHaveProperty('delete');
+		test('TTL cache instance should be defined', () => {
+			testCacheProvider(app.get(TtlCache));
 		});
 	});
 
@@ -55,27 +56,14 @@ describe('TTL cache module test suite', () => {
 			app = TestingModule.createNestApplication();
 
 			await app.init();
-			await app.listen(3000);
 		});
 
-		afterAll(async () => {
-			await app.close();
+		test('TTL cache options should be defined', () => {
+			testCacheOptions(app.get<TtlCacheOptions>(TTL_CACHE_OPTIONS));
 		});
 
-		test('TTL cache options should be defined', async () => {
-			const ttlCacheOptions = app.get<TtlCacheOptions>(TTL_CACHE_OPTIONS);
-			expect(ttlCacheOptions).toBeDefined();
-			expect(ttlCacheOptions.max).toBe(undefined);
-			expect(ttlCacheOptions.ttl).toBe(undefined);
-		});
-
-		test('TTL cache instance should be defined', async () => {
-			const ttlCache = app.get(TtlCache);
-			expect(ttlCache).toBeDefined();
-			expect(ttlCache).toHaveProperty('get');
-			expect(ttlCache).toHaveProperty('set');
-			expect(ttlCache).toHaveProperty('has');
-			expect(ttlCache).toHaveProperty('delete');
+		test('TTL cache instance should be defined', () => {
+			testCacheProvider(app.get(TtlCache));
 		});
 	});
 
@@ -85,21 +73,8 @@ describe('TTL cache module test suite', () => {
 
 		const testModule = async (app: INestApplication): Promise<void> => {
 			await app.init();
-			await app.listen(3000);
-
-			const ttlCacheOptions = app.get<TtlCacheOptions>(TTL_CACHE_OPTIONS);
-			expect(ttlCacheOptions).toBeDefined();
-			expect(ttlCacheOptions.max).toBe(max);
-			expect(ttlCacheOptions.ttl).toBe(ttl);
-
-			const ttlCache = app.get(TtlCache);
-			expect(ttlCache).toBeDefined();
-			expect(ttlCache).toHaveProperty('get');
-			expect(ttlCache).toHaveProperty('set');
-			expect(ttlCache).toHaveProperty('has');
-			expect(ttlCache).toHaveProperty('delete');
-
-			await app.close();
+			testCacheOptions(app.get<TtlCacheOptions>(TTL_CACHE_OPTIONS), max, ttl);
+			testCacheProvider(app.get(TtlCache));
 		};
 
 		test('TTL cache options should be resolved with "useClass"', async () => {

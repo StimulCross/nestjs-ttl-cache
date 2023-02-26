@@ -21,11 +21,9 @@ describe('Cached decorator test suite', () => {
 		cache = app.get(TtlCache);
 
 		await app.init();
-		await app.listen(3000);
 	});
 
 	afterEach(async () => {
-		await app.close();
 		cache.clear();
 	});
 
