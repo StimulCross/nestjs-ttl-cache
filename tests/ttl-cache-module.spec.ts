@@ -1,10 +1,10 @@
 import { type INestApplication } from '@nestjs/common';
 import { type NestApplication } from '@nestjs/core';
 import { Test } from '@nestjs/testing';
-import { TtlCacheFactory } from './test-app/ttl-cache-options-factory/ttl-cache-options-factory';
-import { TtlCacheOptionsFactoryModule } from './test-app/ttl-cache-options-factory/ttl-cache-options-factory.module';
 import { TtlCache, TtlCacheModule, type TtlCacheOptions } from '../src';
 import { TTL_CACHE_OPTIONS } from '../src/constants';
+import { TtlCacheFactory } from './test-app/ttl-cache-options-factory/ttl-cache-options-factory';
+import { TtlCacheOptionsFactoryModule } from './test-app/ttl-cache-options-factory/ttl-cache-options-factory.module';
 
 const testCacheOptions = (options: TtlCacheOptions, max?: number, ttl?: number): void => {
 	expect(options).toBeDefined();

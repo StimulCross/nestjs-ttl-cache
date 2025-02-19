@@ -4,21 +4,21 @@
 
 ### Table of Contents
 
--   [Installation](#installation)
--   [Introduction](#introduction)
--   [General Usage](#general-usage)
--   [Options](#options)
--   [API](#api)
--   [Decorators](#decorators)
-    -   [@Cacheable](#cacheable)
-    -   [@Cached](#cached)
-        -   [@Cached Options](#cached-options)
-    -   [@CachedAsync](#cachedasync)
-        -   [@CachedAsync Options](#cachedasync-options)
-    -   [Argument Options](#argument-options)
--   [Tests](#tests)
-    -   [Coverage](#coverage)
--   [Support](#support)
+- [Installation](#installation)
+- [Introduction](#introduction)
+- [General Usage](#general-usage)
+- [Options](#options)
+- [API](#api)
+- [Decorators](#decorators)
+    - [@Cacheable](#cacheable)
+    - [@Cached](#cached)
+        - [@Cached Options](#cached-options)
+    - [@CachedAsync](#cachedasync)
+        - [@CachedAsync Options](#cachedasync-options)
+    - [Argument Options](#argument-options)
+- [Tests](#tests)
+    - [Coverage](#coverage)
+- [Support](#support)
 
 ## Installation
 
@@ -358,13 +358,13 @@ The `@Cached` decorator can accept options object as the first argument instead 
 
 > **NOTE:** Some options listed below override similar options specified in module [options](#options). If they are not set, the default values will be used.
 
--   `hashFunction` - A function that accepts the same parameters as the decorated method and returns a string that will be appended to the generated cache key. You can specify it as the first argument or use this property in the options object.
--   `useSharedCache` - Whether the decorated method should use shared cache across multiple class instances, even if the class is decorated with `@Cacheable` decorator. Defaults to `false`.
--   `useArgumentOptions` - Makes the decorator use [argument options](#argument-options) passed as the last argument to the decorated method to control caching behavior for a single method call. See below for more information. Defaults to `false`.
--   `ttl` - The max time in milliseconds to store entries of the decorated method.
--   `noDisposeOnSet` - Whether the `dispose()` function should be called if the entry key is still accessible within the cache.
--   `noUpdateTTL` - Whether to not update the TTL when overwriting an existing entry.
--   `updateAgeOnGet` - Whether the age of an entry should be updated on retrieving.
+- `hashFunction` - A function that accepts the same parameters as the decorated method and returns a string that will be appended to the generated cache key. You can specify it as the first argument or use this property in the options object.
+- `useSharedCache` - Whether the decorated method should use shared cache across multiple class instances, even if the class is decorated with `@Cacheable` decorator. Defaults to `false`.
+- `useArgumentOptions` - Makes the decorator use [argument options](#argument-options) passed as the last argument to the decorated method to control caching behavior for a single method call. See below for more information. Defaults to `false`.
+- `ttl` - The max time in milliseconds to store entries of the decorated method.
+- `noDisposeOnSet` - Whether the `dispose()` function should be called if the entry key is still accessible within the cache.
+- `noUpdateTTL` - Whether to not update the TTL when overwriting an existing entry.
+- `updateAgeOnGet` - Whether the age of an entry should be updated on retrieving.
 
 The example below shows how you can apply some cache options at the `CachedAsync` method level.
 
@@ -474,8 +474,8 @@ interface CachedAsyncDecoratorOptions {
 
 The `@CachedAsync` decorator accepts the same [options](#cached-options) as the `@Cached` decorator, but adds a few new ones:
 
--   `cachePromise` - Whether to cache the promise itself. If set to `false`, only the result of the promise will be cached (the latest resolved). Defaults to `true`.
--   `cachePromiseResult` - Whether to cache the result of the promise. If set to `false`, the promise will be deleted fom the cache after resolution without caching the result. Defaults to `true`.
+- `cachePromise` - Whether to cache the promise itself. If set to `false`, only the result of the promise will be cached (the latest resolved). Defaults to `true`.
+- `cachePromiseResult` - Whether to cache the result of the promise. If set to `false`, the promise will be deleted fom the cache after resolution without caching the result. Defaults to `true`.
 
 ## Argument options
 
@@ -494,12 +494,12 @@ Argument options are a way to change caching behavior for **one specific method 
 
 Some options listed below override similar [options](#cached-options) in the decorator. If they are not specified here, the decorator options will be used.
 
--   `returnCached` - Whether to return the cached value. If set to `false`, the original method will be called even if the cached result is available in the cache. The new value replaces the cached one as usual. Defaults to `true`.
--   `useSharedCache` - Whether a specific method call should use the shared cache across multiple class instances, even if [@Cacheable](#cacheable) decorator has been applied to the class. Defaults to the value specified in the [@Cached decorator options](#cached-options).
--   `ttl` - The max time in milliseconds to store entries of the decorated method.
--   `noDisposeOnSet` - Whether the `dispose()` function should be called if the entry key is still accessible within the cache.
--   `noUpdateTTL` - Whether to not update the TTL when overwriting an existing entry.
--   `updateAgeOnGet` - Whether the age of an entry should be updated on retrieving.
+- `returnCached` - Whether to return the cached value. If set to `false`, the original method will be called even if the cached result is available in the cache. The new value replaces the cached one as usual. Defaults to `true`.
+- `useSharedCache` - Whether a specific method call should use the shared cache across multiple class instances, even if [@Cacheable](#cacheable) decorator has been applied to the class. Defaults to the value specified in the [@Cached decorator options](#cached-options).
+- `ttl` - The max time in milliseconds to store entries of the decorated method.
+- `noDisposeOnSet` - Whether the `dispose()` function should be called if the entry key is still accessible within the cache.
+- `noUpdateTTL` - Whether to not update the TTL when overwriting an existing entry.
+- `updateAgeOnGet` - Whether the age of an entry should be updated on retrieving.
 
 To be able to use argument options, you _must_ set `useArgumentOptions` to `true` in the decorator options. Otherwise, they will be ignored.
 

@@ -1,6 +1,5 @@
-import { CachedAsync } from '../../src';
-import { Cached } from '../../src';
 import { Injectable } from '@nestjs/common';
+import { CachedAsync, Cached } from '../../src';
 
 @Injectable()
 export class NonInjectableCacheService {

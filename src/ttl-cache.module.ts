@@ -54,7 +54,7 @@ export class TtlCacheModule {
 	}
 
 	private static _createOptionsProviders(options: TtlCacheAsyncModuleOptions): Provider[] {
-		if (options.useExisting || options.useFactory) {
+		if (options.useExisting ?? options.useFactory) {
 			return [TtlCacheModule._createOptionsProvider(options)];
 		}
 

@@ -1,12 +1,12 @@
+import { Logger } from '@nestjs/common';
 import { type NestApplication } from '@nestjs/core';
 import { Test } from '@nestjs/testing';
 import { TtlCache, TtlCacheModule } from '../src';
 import { CacheableTestService } from './test-app/cacheable-test.service';
+import { NonInjectableCacheService } from './test-app/non-ijectable-cache.service';
 import { TestService } from './test-app/test.service';
 import { wrapCacheKey } from '../src/utils';
 import { sleep } from './test-app/utils/sleep';
-import { Logger } from '@nestjs/common';
-import { NonInjectableCacheService } from './test-app/non-ijectable-cache.service';
 
 describe('Cached async decorator test suite', () => {
 	let app: NestApplication;
@@ -248,6 +248,7 @@ describe('Cached async decorator test suite', () => {
 	});
 
 	test('Cached method should print warning and call original function if the class is not registered in providers', async () => {
+		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		const loggerWarnSpy = jest.spyOn(Logger.prototype, 'warn').mockImplementation(() => {});
 
 		const service = new NonInjectableCacheService();

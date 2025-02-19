@@ -3,8 +3,6 @@ import { Test } from '@nestjs/testing';
 import { TtlCacheModule } from '../src';
 import { CacheableTestService } from './test-app/cacheable-test.service';
 import { CACHE_INSTANCE, CACHE_INSTANCE_ID_PROPERTY, CACHE_INSTANCES_PROPERTY } from '../src/constants';
-import { NonInjectableCacheService } from './test-app/non-ijectable-cache.service';
-import { Logger } from '@nestjs/common';
 
 describe('Cacheable decorator test suite', () => {
 	let app: NestApplication;
