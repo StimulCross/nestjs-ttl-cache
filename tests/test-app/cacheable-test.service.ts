@@ -5,9 +5,8 @@ import { CACHE_INSTANCE_ID_PROPERTY, CACHE_INSTANCES_PROPERTY } from '../../src/
 @Injectable({ scope: Scope.TRANSIENT })
 @Cacheable()
 export class CacheableTestService {
-	// Just to suppress warnings...
-	static [CACHE_INSTANCES_PROPERTY]: number;
-	[CACHE_INSTANCE_ID_PROPERTY]!: number;
+	declare static [CACHE_INSTANCES_PROPERTY]: number;
+	declare [CACHE_INSTANCE_ID_PROPERTY]: number;
 
 	@Cached({ ttl: 100 })
 	public getRandomNumber(_options?: CacheArgumentOptions): number {
