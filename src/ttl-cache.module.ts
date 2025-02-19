@@ -43,7 +43,7 @@ export class TtlCacheModule {
 	 *
 	 * @param options TTL cache async options.
 	 */
-	public static async registerAsync(options: TtlCacheAsyncModuleOptions): Promise<DynamicModule> {
+	public static registerAsync(options: TtlCacheAsyncModuleOptions): DynamicModule {
 		return {
 			global: options.isGlobal,
 			imports: options.imports ?? [],
