@@ -6,6 +6,8 @@ import { sleep } from './test-app/utils/sleep';
 import { TtlCache, TtlCacheModule } from '../src';
 import { CACHE_INSTANCE_ID_PROPERTY } from '../src/constants';
 import { wrapCacheKey } from '../src/utils';
+import { Logger } from '@nestjs/common';
+import { NonInjectableCacheService } from './test-app/non-ijectable-cache.service';
 
 describe('Cached decorator test suite', () => {
 	let app: NestApplication;
@@ -187,5 +189,21 @@ describe('Cached decorator test suite', () => {
 		testService.addHashFunctionOptions(a, b);
 
 		expect(cache.get(cacheKey)).toBe(a + b);
+	});
+
+	test('Cached method should print warning and call original function if the class is not registered in providers', async () => {
+		const loggerWarnSpy = jest.spyOn(Logger.prototype, 'warn').mockImplementation(() => {});
+
+		const service = new NonInjectableCacheService();
+		service.getRandomNumber();
+
+		expect(loggerWarnSpy).toHaveBeenCalledTimes(1);
+		expect(loggerWarnSpy).toHaveBeenCalledWith(
+			expect.stringContaining(
+				'Failed to get the cache instance in method NonInjectableCacheService.getRandomNumber()'
+			)
+		);
+
+		loggerWarnSpy.mockRestore();
 	});
 });
