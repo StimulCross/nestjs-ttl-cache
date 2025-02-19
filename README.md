@@ -1,7 +1,5 @@
 # NestJS TTL Cache
 
-> **WARNING:** Although this library has been automatically (100% covered) and manually tested, it may still have fundamental design issues.
-
 ### Table of Contents
 
 - [Installation](#installation)
@@ -34,9 +32,15 @@ Using **yarn**:
 yarn add nestjs-ttl-cache
 ```
 
+Using **pnpm**:
+
+```
+pnpm add nestjs-ttl-cache
+```
+
 ## Introduction
 
-This is a NestJS wrapper around [@isaacs/ttlcache](https://github.com/isaacs/ttlcache) library with support for fancy **[cache decorators](#decorators)** ❤
+This is a NestJS wrapper around [@isaacs/ttlcache](https://github.com/isaacs/ttlcache) library with support for fancy **[cache decorators](#decorators)**.
 
 This cache module focuses on a TTL strategy where each entry in the cache has a limited lifetime and will be automatically deleted on expire.
 
@@ -52,7 +56,7 @@ You can also consider using [nestjs-lru-cache](https://github.com/stimulcross/ne
 
 ## General Usage
 
-First of all, you must register the module in your main **AppModule** using either `register` or `registerAsync` static methods.
+First, you must register the module in your main **AppModule** using either `register` or `registerAsync` static methods.
 
 `register` method allow you to directly set [cache options](#options):
 
@@ -72,7 +76,7 @@ import { TtlCacheModule } from 'nestjs-ttl-cache';
 export class AppModule {}
 ```
 
-`registerAsync` method allow you to use one of the following options factories: `useFactory`, `useClass`, or `useExisting`. If you need dynamically generate cache options, for example, using your `ConfigService`, you can do this using `useFactory` like this:
+`registerAsync` method allow you to use one of the following options factories: `useFactory`, `useClass`, or `useExisting`. If you need dynamically generate cache options, for example, using your `ConfigService`, you can do it using `useFactory` like this:
 
 ```ts
 import { Module } from '@nestjs/common';
@@ -171,7 +175,8 @@ interface TtlCacheOptions<K = any, V = any> {
 }
 ```
 
-> **TIP:** Read the detailed description of each option in the original [@isaacs/ttlcache repository](https://github.com/isaacs/ttlcache#new-ttlcache-ttl-max--infinty-updateageonget--false-noupdatettl--false-nodisposeonset--false-).
+> [!TIP]
+> Read the detailed description of each option in the original [@isaacs/ttlcache repository](https://github.com/isaacs/ttlcache#new-ttlcache-ttl-max--infinty-updateageonget--false-noupdatettl--false-nodisposeonset--false-).
 
 ### API
 
@@ -194,7 +199,8 @@ interface TtlCache<K = any, V = any> {
 }
 ```
 
-> **TIP:** Read the detailed description of the API in the original [@isaacs/ttlcache repository](https://github.com/isaacs/ttlcache#cachesize).
+> [!TIP]
+> Read the detailed description of the API in the original [@isaacs/ttlcache repository](https://github.com/isaacs/ttlcache#cachesize).
 
 ## Decorators
 
@@ -225,7 +231,7 @@ anyCustomProvider.getRandomNumber(); // -> 0.24774185142387684
 anyCustomProvider.getRandomNumber(); // -> 0.75334877023185987
 ```
 
-This will work as expected if you have the single instance of the class. But if you have multiple instances of the same class (e.g. `TRANSIENT` or `REQUEST` scoped), **they will use the shared cache by default**. In order to separate them, you need to apply the `@Cacheable` decorator on the class.
+This will work as expected if you have one instance of the class. But if you have multiple instances of the same class (e.g. `TRANSIENT` or `REQUEST` scoped), **they will use the shared cache by default**. To separate them, you need to apply the `@Cacheable` decorator on the class.
 
 ### @Cacheable
 
@@ -259,7 +265,7 @@ anyCustomProvider1.getRandomNumber(); // -> 0.6607802129894669
 anyCustomProvider2.getRandomNumber(); // -> 0.6607802129894669
 ```
 
-If you're happy with different instances sharing the same cache, then don't apply this decorator. There is also a way to force some cached methods to use the shared cache by passing `useSharedCache` option to the `@Cached` or `@CachedAsync` decorators, even if the class is decorated with `@Cacheable` decorator. See below for more information.
+If you're fine with different instances sharing the same cache, you don't need to apply this decorator. However, if you want certain cached methods to explicitly use the shared cache, you can pass the `useSharedCache` option to the `@Cached` or `@CachedAsync` decorators—even when the class is decorated with `@Cacheable`. See below for more details.
 
 ### @Cached
 
@@ -294,7 +300,7 @@ export class AnyCustomProvider {
 }
 ```
 
-If the decorated method has no parameters, you can use it as is as shown in the above examples. However, if the method has parameters, then by default they are not involved in the generation of the cache key, and calling the method with different arguments will result in the same cache key generation. To work around this issue, you can provide a function as the first argument that accepts the same parameters as the decorated method and returns a string.
+If the decorated method does not accept any parameters, you can use it as-is, as demonstrated in the examples above. However, if the method does accept parameters, note that by default they are not factored into the cache key generation. This means that invoking the method with different arguments will produce the same cache key. To address this, you can supply a function as the first argument, which should accept the same parameters as the decorated method and return a string to be used as the cache key.
 
 ```ts
 import { Injectable } from '@nestjs/common';
@@ -336,7 +342,8 @@ export class UsersService {
 
 The resulting cache key will look something like this: `__UsersService.getUsers:manager_online_false__`.
 
-> **NOTE:** You're better off not using `JSON.stringify()` to convert objects to strings. If two identical objects with the same properties and values are passed with a different order of properties, this will generate different keys, for example, `{"key":1,"val":1}` and `{"val":1,"key":1}`.
+> [!TIP]
+> Avoid using `JSON.stringify()` to convert objects to strings for key generation. Even if two objects have the same properties and values, a different order of properties can produce different strings — for instance, `{"key1":1,"key2":2}` versus `{"key2":2,"key1":1}`. This may lead to unexpected behavior when these stringified objects are used as keys.
 
 By default, the `@Cached` decorator will use the default [options](#options) specified on module registration, but it also ships its own options and allows you to override the default options for the decorated method.
 
@@ -356,7 +363,8 @@ interface CachedDecoratorOptions {
 
 The `@Cached` decorator can accept options object as the first argument instead of hash function. These options allow you to flexibly control caching behavior for a single decorated method.
 
-> **NOTE:** Some options listed below override similar options specified in module [options](#options). If they are not set, the default values will be used.
+> [!NOTE]
+> Some options listed below override similar options specified in module [options](#options). If they are not set, the default values will be used.
 
 - `hashFunction` - A function that accepts the same parameters as the decorated method and returns a string that will be appended to the generated cache key. You can specify it as the first argument or use this property in the options object.
 - `useSharedCache` - Whether the decorated method should use shared cache across multiple class instances, even if the class is decorated with `@Cacheable` decorator. Defaults to `false`.
@@ -547,11 +555,11 @@ Available test commands: `test`, `test:verbose`, `test:cov`, `test:cov:verbose`.
 `test:cov` output:
 
 ```
- PASS  tests/ttl-cache-module.spec.ts
+ PASS  tests/cacheable.decorator.spec.ts
  PASS  tests/cached-async.decorator.spec.ts
  PASS  tests/cached.decorator.spec.ts
  PASS  tests/ttl-cache.spec.ts
- PASS  tests/cacheable.decorator.spec.ts
+ PASS  tests/ttl-cache-module.spec.ts
 ----------------------------|---------|----------|---------|---------|-------------------
 File                        | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
 ----------------------------|---------|----------|---------|---------|-------------------
@@ -571,11 +579,11 @@ All files                   |     100 |      100 |     100 |     100 |
 ----------------------------|---------|----------|---------|---------|-------------------
 
 Test Suites: 5 passed, 5 total
-Tests:       71 passed, 71 total
+Tests:       73 passed, 73 total
 Snapshots:   0 total
-Time:        5.225 s, estimated 12 s
+Time:        3.516 s, estimated 4 s
 Ran all test suites.
-Done in 5.87s.
+Done in 3.89s.
 ```
 
 ## Support
