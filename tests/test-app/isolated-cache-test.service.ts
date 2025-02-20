@@ -1,10 +1,10 @@
 import { Injectable, Scope } from '@nestjs/common';
-import { CachedAsync, Cacheable, Cached, CacheArgumentOptions } from '../../src';
+import { CachedAsync, IsolatedCache, Cached, CacheArgumentOptions } from '../../src';
 import { CACHE_INSTANCE_ID_PROPERTY, CACHE_INSTANCES_PROPERTY } from '../../src/constants';
 
 @Injectable({ scope: Scope.TRANSIENT })
-@Cacheable()
-export class CacheableTestService {
+@IsolatedCache()
+export class IsolatedCacheTestService {
 	declare static [CACHE_INSTANCES_PROPERTY]: number;
 	declare [CACHE_INSTANCE_ID_PROPERTY]: number;
 

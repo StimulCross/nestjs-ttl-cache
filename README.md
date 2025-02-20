@@ -8,7 +8,7 @@
 - [Options](#options)
 - [API](#api)
 - [Decorators](#decorators)
-    - [@Cacheable](#cacheable)
+    - [@IsolatedCache](#isolatedcache)
     - [@Cached](#cached)
         - [@Cached Options](#cached-options)
     - [@CachedAsync](#cachedasync)
@@ -225,18 +225,18 @@ anyCustomProvider.getRandomNumber(); // -> 0.24774185142387684
 anyCustomProvider.getRandomNumber(); // -> 0.75334877023185987
 ```
 
-This works as expected when you only have one instance of the class. However, if you create multiple instances of the same class (for example, using `TRANSIENT` scope), all instances will share the same cache by default. To ensure each instance maintains its own cache, you should apply the `@Cacheable` decorator at the class level.
+This works as expected when you only have one instance of the class. However, if you create multiple instances of the same class (for example, using `TRANSIENT` scope), all instances will share the same cache by default. To ensure each instance maintains its own cache, you should apply the `@IsolatedCache` decorator at the class level.
 
-### @Cacheable
+### @IsolatedCache
 
-The `@Cacheable` decorator ensures that each class instance maintains its own isolated cache, providing instance-specific caching behavior.
+The `@IsolatedCache` decorator ensures that each class instance maintains its own isolated cache, providing instance-specific caching behavior.
 
 ```ts
 import { Injectable } from '@nestjs/common';
-import { Cacheable, Cached } from 'nestjs-ttl-cache';
+import { IsolatedCache, Cached } from 'nestjs-ttl-cache';
 
 @Injectable({ scope: Scope.TRANSIENT })
-@Cacheable()
+@IsolatedCache()
 export class AnyCustomProvider {
 	@Cached()
 	public getRandomNumber(): number {
@@ -245,21 +245,23 @@ export class AnyCustomProvider {
 }
 ```
 
-The `@Cacheable` decorator dynamically assigns a unique identifier to each class instance, enabling `@Cached` and `@CachedAsync` decorators to generate distinct cache keys. This mechanism ensures that cached method results are segregated by instance, preventing potential data cross-contamination. For example, different instances will have cache keys like `__AnyCustomProvider_1.getRandomNumber__` and `__AnyCustomProvider_2.getRandomNumber__`.
+The `@IsolatedCache` decorator dynamically assigns a unique identifier to each class instance, enabling `@Cached` and `@CachedAsync` decorators to generate distinct cache keys. This mechanism ensures that cached method results are segregated by instance, preventing potential data cross-contamination. For example, different instances will have cache keys like `__AnyCustomProvider_1.getRandomNumber__` and `__AnyCustomProvider_2.getRandomNumber__`.
 
 ```ts
-// With @Cacheable()
+// With @IsolatedCache()
 // Different class instances use separate cache
 anyCustomProvider1.getRandomNumber(); // -> 0.2477418514238761
+anyCustomProvider1.getRandomNumber(); // -> 0.2477418514238761
+anyCustomProvider2.getRandomNumber(); // -> 0.7533487702318598
 anyCustomProvider2.getRandomNumber(); // -> 0.7533487702318598
 
-// Without @Cacheable()
+// Without @IsolatedCache()
 // Different class instances use shared cache
 anyCustomProvider1.getRandomNumber(); // -> 0.6607802129894669
 anyCustomProvider2.getRandomNumber(); // -> 0.6607802129894669
 ```
 
-If you're fine with different instances sharing the same cache, you don't need to apply this decorator. However, if you want certain cached methods to explicitly use the shared cache, you can pass the `useSharedCache` option to the `@Cached` or `@CachedAsync` decorators — even when the class is decorated with `@Cacheable`. See below for more details.
+If you're fine with different instances sharing the same cache, you don't need to apply this decorator. However, if you want certain cached methods to explicitly use the shared cache, you can pass the `useSharedCache` option to the `@Cached` or `@CachedAsync` decorators — even when the class is decorated with `@IsolatedCache`. See below for more details.
 
 ### @Cached
 
@@ -356,7 +358,7 @@ The `@Cached` decorator can accept an options object as its first argument. This
 > Some options detailed below will override corresponding module-level settings defined under [options](#options). If no value is provided, the default is used.
 
 - `hashFunction` - A function that accepts the same parameters as the decorated method and returns a string to be appended to the generated cache key. This function can be specified either as the first argument to the decorator or as a property within the options object.
-- `useSharedCache` - A boolean that determines whether the decorated method should share a common cache across multiple instances of the class, even if the class itself is decorated with the `@Cacheable` decorator. By default, this value is set to `false`.
+- `useSharedCache` - A boolean that determines whether the decorated method should share a common cache across multiple instances of the class, even if the class itself is decorated with the `@IsolatedCache` decorator. By default, this value is set to `false`.
 - `useArgumentOptions` - When set to `true`, this option directs the decorator to use the [argument options](#argument-options) provided as the last parameter of the decorated method to manage caching behavior for that specific call. By default, its value is `false`.
 
 The library internally utilizes the cache methods (`cache.get()`, `cache.set()`, and `cache.has()`) provided by the underlying caching library. You can specify method-specific options to customize the behavior of these internal cache calls. For example, `cache.get()` accepts an options object that includes the `updateAgeOnGet` flag refreshes the TTL of a cached entry each time it is accessed. By including this flag in the decorator's options, you ensure it is consistently applied during internal `cache.get()` operations.
@@ -367,10 +369,10 @@ The following example demonstrates how to apply specific cache options using the
 
 ```ts
 import { Injectable } from '@nestjs/common';
-import { Cacheable, Cached } from 'nestjs-ttl-cache';
+import { IsolatedCache, Cached } from 'nestjs-ttl-cache';
 
 @Injectable({ scope: Scope.TRANSIENT })
-@Cacheable()
+@IsolatedCache()
 export class AnyCustomProvider {
 	@Cached({ ttl: 10_000, updateAgeOnGet: true })
 	public getRandomNumber(): number {
@@ -385,12 +387,12 @@ export class AnyCustomProvider {
 ```
 
 ```ts
-// @Cacheable() without `useSharedCache` option
+// @IsolatedCache() without `useSharedCache` option
 // Different class instances use separate cache
 anyCustomProvider1.getRandomNumber(); // -> 0.2477418514238761
 anyCustomProvider2.getRandomNumber(); // -> 0.7533487702318598
 
-// @Cacheable() with `useSharedCache` option passed to the decorator
+// @IsolatedCache() with `useSharedCache` option passed to the decorator
 // Different class instances use shared cache only for this method
 anyCustomProvider1.getRandomNumberShared(); // -> 0.6607802129894669
 anyCustomProvider2.getRandomNumberShared(); // -> 0.6607802129894669
@@ -495,7 +497,7 @@ Argument options allow you to modify the caching behavior for a **single method 
 Some of these options will override the corresponding settings defined in the decorator's [options]
 
 - `returnCached` – Specifies whether to return the cached value. When set to `false`, the original method is executed regardless of a cached result, and the new result then replaces the cached one. The default value is `true`.
-- `useSharedCache` – Determines if a specific method call should use a shared cache across multiple class instances, even when the [@Cacheable](#cacheable) decorator is applied to the class. By default, it adopts the value defined in the [@Cached decorator options](#cached-options).
+- `useSharedCache` – Determines if a specific method call should use a shared cache across multiple class instances, even when the [@IsolatedCache](#isolatedcache) decorator is applied to the class. By default, it adopts the value defined in the [@Cached decorator options](#cached-options).
 
 > [!IMPORTANT]
 > To enable argument options, `useArgumentOptions` must be set to `true` in the decorator options; otherwise, they will be ignored.
@@ -547,7 +549,7 @@ Available test commands: `test`, `test:verbose`, `test:cov`, `test:cov:verbose`.
  PASS  tests/cached.decorator.spec.ts
  PASS  tests/ttl-cache.module.spec.ts
  PASS  tests/ttl-cache.spec.ts
- PASS  tests/cacheable.decorator.spec.ts
+ PASS  tests/isolated-cache.decorator.spec.ts
 --------------------------------|---------|----------|---------|---------|-------------------
 File                            | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
 --------------------------------|---------|----------|---------|---------|-------------------
@@ -556,7 +558,7 @@ All files                       |     100 |      100 |     100 |     100 |
   constants.ts                  |     100 |      100 |     100 |     100 |
   ttl-cache.module.ts           |     100 |      100 |     100 |     100 |
  src/decorators                 |     100 |      100 |     100 |     100 |
-  cacheable.decorator.ts        |     100 |      100 |     100 |     100 |
+  isolated-cache.decorator.ts        |     100 |      100 |     100 |     100 |
   cached-async.decorator.ts     |     100 |      100 |     100 |     100 |
   cached.decorator.ts           |     100 |      100 |     100 |     100 |
   inject-cache.decorator.ts |     100 |      100 |     100 |     100 |
