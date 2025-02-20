@@ -36,11 +36,6 @@ describe('Cacheable decorator test suite', () => {
 		expect(Object.getOwnPropertySymbols(cacheableTestService)).toContain(CACHE_INSTANCE_ID_PROPERTY);
 	});
 
-	test('Cacheable instance must has "__CACHE_INSTANCE_ID__" property', async () => {
-		const cacheableTestService = await app.resolve(CacheableTestService);
-		expect(Object.getOwnPropertySymbols(cacheableTestService)).toContain(CACHE_INSTANCE_ID_PROPERTY);
-	});
-
 	test('Cacheable instance "__CACHE_INSTANCE_ID__" property must be equal to the static "__CACHE_INSTANCES__" property', async () => {
 		const cacheableTestService = await app.resolve(CacheableTestService);
 		expect(CacheableTestService[CACHE_INSTANCES_PROPERTY]).toBe(cacheableTestService[CACHE_INSTANCE_ID_PROPERTY]);
