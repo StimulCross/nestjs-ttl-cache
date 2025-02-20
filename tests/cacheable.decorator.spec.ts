@@ -1,3 +1,4 @@
+import * as TTLCache from '@isaacs/ttlcache';
 import { type NestApplication } from '@nestjs/core';
 import { Test } from '@nestjs/testing';
 import { TtlCacheModule } from '../src';
@@ -22,6 +23,7 @@ describe('Cacheable decorator test suite', () => {
 		expect(Object.getOwnPropertySymbols(Object.getPrototypeOf(CacheableTestService))).toContain(
 			CACHE_INSTANCES_PROPERTY
 		);
+		expect(typeof CacheableTestService[CACHE_INSTANCES_PROPERTY]).toBe('number');
 	});
 
 	test('Cacheable class must increment static "__CACHE_INSTANCES__" property on new instance creation', async () => {
@@ -34,6 +36,7 @@ describe('Cacheable decorator test suite', () => {
 	test('Cacheable instance must has "__CACHE_INSTANCE_ID__" property', async () => {
 		const cacheableTestService = await app.resolve(CacheableTestService);
 		expect(Object.getOwnPropertySymbols(cacheableTestService)).toContain(CACHE_INSTANCE_ID_PROPERTY);
+		expect(typeof cacheableTestService[CACHE_INSTANCE_ID_PROPERTY]).toBe('number');
 	});
 
 	test('Cacheable instance "__CACHE_INSTANCE_ID__" property must be equal to the static "__CACHE_INSTANCES__" property', async () => {
@@ -44,5 +47,6 @@ describe('Cacheable decorator test suite', () => {
 	test('Cacheable instance must has DI injected cache service', async () => {
 		const cacheableTestService = await app.resolve(CacheableTestService);
 		expect(Object.getOwnPropertySymbols(cacheableTestService)).toContain(CACHE_INSTANCE);
+		expect(cacheableTestService[CACHE_INSTANCE]).toBeInstanceOf(TTLCache);
 	});
 });
