@@ -575,7 +575,7 @@ Available test commands: `test`, `test:verbose`, `test:cov`, `test:cov:verbose`.
 ```
  PASS  tests/cached-async.decorator.spec.ts
  PASS  tests/cached.decorator.spec.ts
- PASS  tests/ttl-cache-module.spec.ts
+ PASS  tests/ttl-cache.module.spec.ts
  PASS  tests/ttl-cache.spec.ts
  PASS  tests/cacheable.decorator.spec.ts
 --------------------------------|---------|----------|---------|---------|-------------------
