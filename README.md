@@ -589,7 +589,7 @@ All files                       |     100 |      100 |     100 |     100 |
   cacheable.decorator.ts        |     100 |      100 |     100 |     100 |
   cached-async.decorator.ts     |     100 |      100 |     100 |     100 |
   cached.decorator.ts           |     100 |      100 |     100 |     100 |
-  inject-ttl-cache.decorator.ts |     100 |      100 |     100 |     100 |
+  inject-cache.decorator.ts |     100 |      100 |     100 |     100 |
  src/utils                      |     100 |      100 |     100 |     100 |
   is-object.ts                  |     100 |      100 |     100 |     100 |
   wrap-cache-key.ts             |     100 |      100 |     100 |     100 |
