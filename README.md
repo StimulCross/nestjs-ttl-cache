@@ -23,19 +23,19 @@
 Using **npm**:
 
 ```
-npm i --save nestjs-ttl-cache
+npm i --save nestjs-ttl-cache @isaacs/ttlcache
 ```
 
 Using **yarn**:
 
 ```
-yarn add nestjs-ttl-cache
+yarn add nestjs-ttl-cache @isaacs/ttlcache
 ```
 
 Using **pnpm**:
 
 ```
-pnpm add nestjs-ttl-cache
+pnpm add nestjs-ttl-cache @isaacs/ttlcache
 ```
 
 ## Introduction
