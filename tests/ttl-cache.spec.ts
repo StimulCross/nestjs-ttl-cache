@@ -1,11 +1,13 @@
+import type * as TTLCache from '@isaacs/ttlcache';
 import { type NestApplication } from '@nestjs/core';
 import { Test } from '@nestjs/testing';
-import { TtlCacheModule, TtlCache } from '../src';
+import { TtlCacheModule } from '../src';
+import { TTL_CACHE } from '../src/constants';
 import { sleep } from './test-app/utils/sleep';
 
 describe('TTL cache provider test suite', () => {
 	let app: NestApplication;
-	let cache: TtlCache;
+	let cache: TTLCache<unknown, unknown>;
 	const max = 1000;
 	const ttl = 5000;
 
@@ -15,7 +17,7 @@ describe('TTL cache provider test suite', () => {
 		}).compile();
 
 		app = TestingModule.createNestApplication();
-		cache = app.get(TtlCache);
+		cache = app.get(TTL_CACHE);
 
 		await app.init();
 	});
@@ -36,10 +38,10 @@ describe('TTL cache provider test suite', () => {
 			ttl: Infinity
 		};
 
-		cache.set(cacheEntry1.key, cacheEntry1.val, cacheEntry1.ttl);
+		cache.set(cacheEntry1.key, cacheEntry1.val, { ttl: cacheEntry1.ttl });
 		expect(cache.size).toBe(1);
 
-		cache.set(cacheEntry2.key, cacheEntry2.val, cacheEntry2.ttl);
+		cache.set(cacheEntry2.key, cacheEntry2.val, { ttl: cacheEntry2.ttl });
 		expect(cache.size).toBe(2);
 	});
 
@@ -82,7 +84,7 @@ describe('TTL cache provider test suite', () => {
 			val: 1,
 			ttl: Infinity
 		};
-		cache.set(cacheEntry.key, cacheEntry.val, cacheEntry.ttl);
+		cache.set(cacheEntry.key, cacheEntry.val, { ttl: cacheEntry.ttl });
 
 		expect(cache.get(cacheEntry.key)).toBe(cacheEntry.val);
 		expect(cache.getRemainingTTL(cacheEntry.key)).toBe(cacheEntry.ttl);
@@ -108,7 +110,7 @@ describe('TTL cache provider test suite', () => {
 			val: 1,
 			ttl: 10
 		};
-		cache.set(cacheEntry.key, cacheEntry.val, cacheEntry.ttl);
+		cache.set(cacheEntry.key, cacheEntry.val, { ttl: cacheEntry.ttl });
 
 		await sleep(cacheEntry.ttl + 1);
 
@@ -126,8 +128,8 @@ describe('TTL cache provider test suite', () => {
 			val: 2,
 			ttl: 100
 		};
-		cache.set(cacheEntry1.key, cacheEntry1.val, cacheEntry1.ttl);
-		cache.set(cacheEntry2.key, cacheEntry2.val, cacheEntry2.ttl);
+		cache.set(cacheEntry1.key, cacheEntry1.val, { ttl: cacheEntry1.ttl });
+		cache.set(cacheEntry2.key, cacheEntry2.val, { ttl: cacheEntry2.ttl });
 
 		expect(cache.delete(cacheEntry1.key)).toBe(true);
 		expect(cache.delete(cacheEntry2.key)).toBe(true);
@@ -139,7 +141,7 @@ describe('TTL cache provider test suite', () => {
 			val: 1,
 			ttl: Infinity
 		};
-		cache.set(cacheEntry1.key, cacheEntry1.val, cacheEntry1.ttl);
+		cache.set(cacheEntry1.key, cacheEntry1.val, { ttl: cacheEntry1.ttl });
 
 		expect(cache.getRemainingTTL(cacheEntry1.key)).toBe(Infinity);
 	});
@@ -154,7 +156,7 @@ describe('TTL cache provider test suite', () => {
 			val: 1,
 			ttl: 10
 		};
-		cache.set(cacheEntry1.key, cacheEntry1.val, cacheEntry1.ttl);
+		cache.set(cacheEntry1.key, cacheEntry1.val, { ttl: cacheEntry1.ttl });
 
 		await sleep(cacheEntry1.ttl + 1);
 

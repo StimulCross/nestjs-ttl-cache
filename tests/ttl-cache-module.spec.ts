@@ -1,10 +1,20 @@
-import { type INestApplication } from '@nestjs/common';
+import * as TTLCache from '@isaacs/ttlcache';
+import { type INestApplication, Injectable } from '@nestjs/common';
 import { type NestApplication } from '@nestjs/core';
 import { Test } from '@nestjs/testing';
-import { TtlCache, TtlCacheModule, type TtlCacheOptions } from '../src';
-import { TTL_CACHE_OPTIONS } from '../src/constants';
+import { InjectCache, TtlCacheModule, type TtlCacheOptions } from '../src';
+import { TTL_CACHE, TTL_CACHE_OPTIONS } from '../src/constants';
 import { TtlCacheFactory } from './test-app/ttl-cache-options-factory/ttl-cache-options-factory';
 import { TtlCacheOptionsFactoryModule } from './test-app/ttl-cache-options-factory/ttl-cache-options-factory.module';
+
+@Injectable()
+class CacheConsumer {
+	constructor(@InjectCache() private readonly cache: TTLCache<unknown, unknown>) {}
+
+	getCache(): TTLCache<unknown, unknown> {
+		return this.cache;
+	}
+}
 
 const testCacheOptions = (options: TtlCacheOptions, max?: number, ttl?: number): void => {
 	expect(options).toBeDefined();
@@ -12,8 +22,9 @@ const testCacheOptions = (options: TtlCacheOptions, max?: number, ttl?: number):
 	expect(options.ttl).toBe(ttl);
 };
 
-const testCacheProvider = (ttlCache: TtlCache): void => {
+const testCacheInstance = (ttlCache: TTLCache<unknown, unknown>): void => {
 	expect(ttlCache).toBeDefined();
+	expect(ttlCache).toBeInstanceOf(TTLCache);
 	expect(ttlCache).toHaveProperty('get');
 	expect(ttlCache).toHaveProperty('set');
 	expect(ttlCache).toHaveProperty('has');
@@ -41,7 +52,7 @@ describe('TTL cache module test suite', () => {
 		});
 
 		test('TTL cache instance should be defined', () => {
-			testCacheProvider(app.get(TtlCache));
+			testCacheInstance(app.get(TTL_CACHE));
 		});
 	});
 
@@ -63,7 +74,7 @@ describe('TTL cache module test suite', () => {
 		});
 
 		test('TTL cache instance should be defined', () => {
-			testCacheProvider(app.get(TtlCache));
+			testCacheInstance(app.get(TTL_CACHE));
 		});
 	});
 
@@ -74,7 +85,7 @@ describe('TTL cache module test suite', () => {
 		const testModule = async (app: INestApplication): Promise<void> => {
 			await app.init();
 			testCacheOptions(app.get<TtlCacheOptions>(TTL_CACHE_OPTIONS), max, ttl);
-			testCacheProvider(app.get(TtlCache));
+			testCacheInstance(app.get(TTL_CACHE));
 		};
 
 		test('TTL cache options should be resolved with "useClass"', async () => {
@@ -135,6 +146,26 @@ describe('TTL cache module test suite', () => {
 			}).compile();
 			const app = TestingModule.createNestApplication();
 			await testModule(app);
+		});
+	});
+
+	describe('TTL cache instance', () => {
+		let app: NestApplication;
+
+		beforeAll(async () => {
+			const TestingModule = await Test.createTestingModule({
+				imports: [TtlCacheModule.register()],
+				providers: [CacheConsumer]
+			}).compile();
+
+			app = TestingModule.createNestApplication();
+
+			await app.init();
+		});
+
+		test('TTLCache instance should be injected using @InjectCache decorator', () => {
+			const cacheConsumer = app.get(CacheConsumer);
+			testCacheInstance(cacheConsumer.getCache());
 		});
 	});
 });

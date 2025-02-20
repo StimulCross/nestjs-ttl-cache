@@ -1,7 +1,7 @@
+import type * as TTLCache from '@isaacs/ttlcache';
 import { Inject, Logger } from '@nestjs/common';
-import { CACHE_INSTANCE, CACHE_INSTANCE_ID_PROPERTY } from '../constants';
+import { CACHE_INSTANCE, CACHE_INSTANCE_ID_PROPERTY, TTL_CACHE } from '../constants';
 import { type CacheArgumentOptions, type CachedAsyncDecoratorOptions } from '../interfaces';
-import { TtlCache } from '../providers';
 import { isObject, wrapCacheKey } from '../utils';
 
 const logger = new Logger('TtlCache', { timestamp: true });
@@ -13,7 +13,7 @@ function createCachedAsyncFunction(
 	options: CachedAsyncDecoratorOptions
 ) {
 	return async function (
-		this: { [CACHE_INSTANCE_ID_PROPERTY]?: number; [CACHE_INSTANCE]?: TtlCache<unknown, unknown> },
+		this: { [CACHE_INSTANCE_ID_PROPERTY]?: number; [CACHE_INSTANCE]?: TTLCache<unknown, unknown> },
 		...args: unknown[]
 	) {
 		if (!this[CACHE_INSTANCE]) {
@@ -109,7 +109,7 @@ export function CachedAsync(
 		| CachedAsyncDecoratorOptions['ttl']
 		| CachedAsyncDecoratorOptions['hashFunction'] = {}
 ): MethodDecorator {
-	const injectCache = Inject(TtlCache);
+	const injectCache = Inject(TTL_CACHE);
 
 	return (target: Object, propertyKey: string | symbol, descriptor: PropertyDescriptor): PropertyDescriptor => {
 		injectCache(target, CACHE_INSTANCE);

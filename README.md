@@ -148,21 +148,39 @@ import { TtlCacheModule } from 'nestjs-ttl-cache';
 export class AppModule {}
 ```
 
-Once the module is registered, `TtlCache` provider can be injected as a dependency. Note that `TtlCacheModule` is registered as a global module, so it does not need to be imported into other modules.
+Once the module is registered, original `TTLCache` instance can be injected as a dependency using `TTL_CACHE` token or `@InjectCache` decorator.
+
+Note that `TtlCacheModule` is registered as a global module, so it does not need to be imported into other modules.
 
 ```ts
-import { Injectable } from '@nestjs/common';
-import { TtlCache } from 'nestjs-ttl-cache';
+import TTLCache from '@isaacs/ttlcache';
+import { Inject, Injectable } from '@nestjs/common';
+import { TTL_CACHE } from 'nestjs-ttl-cache';
 
 @Injectable()
 export class AnyCustomProvider {
-	constructor(private readonly _cache: TtlCache) {}
+	constructor(@Inject(TTL_CACHE) private readonly _cache: TTLCache<{}, {}>) {}
+}
+```
+
+Or
+
+```ts
+import TTLCache from '@isaacs/ttlcache';
+import { Injectable } from '@nestjs/common';
+import { InjectCache } from 'nestjs-ttl-cache';
+
+@Injectable()
+export class AnyCustomProvider {
+	constructor(@InjectCache() private readonly _cache: TTLCache<{}, {}>) {}
 }
 ```
 
 See [API](#api) section below for the cache usage information.
 
 ### Options
+
+The options are directly extending the original TTLCache options.
 
 ```ts
 interface TtlCacheOptions<K = any, V = any> {
@@ -555,35 +573,35 @@ Available test commands: `test`, `test:verbose`, `test:cov`, `test:cov:verbose`.
 `test:cov` output:
 
 ```
- PASS  tests/cacheable.decorator.spec.ts
  PASS  tests/cached-async.decorator.spec.ts
  PASS  tests/cached.decorator.spec.ts
- PASS  tests/ttl-cache.spec.ts
  PASS  tests/ttl-cache-module.spec.ts
-----------------------------|---------|----------|---------|---------|-------------------
-File                        | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
-----------------------------|---------|----------|---------|---------|-------------------
-All files                   |     100 |      100 |     100 |     100 |
- src                        |     100 |      100 |     100 |     100 |
-  constants.ts              |     100 |      100 |     100 |     100 |
-  ttl-cache.module.ts       |     100 |      100 |     100 |     100 |
- src/decorators             |     100 |      100 |     100 |     100 |
-  cacheable.decorator.ts    |     100 |      100 |     100 |     100 |
-  cached-async.decorator.ts |     100 |      100 |     100 |     100 |
-  cached.decorator.ts       |     100 |      100 |     100 |     100 |
- src/providers              |     100 |      100 |     100 |     100 |
-  ttl-cache.ts              |     100 |      100 |     100 |     100 |
- src/utils                  |     100 |      100 |     100 |     100 |
-  is-object.ts              |     100 |      100 |     100 |     100 |
-  wrap-cache-key.ts         |     100 |      100 |     100 |     100 |
-----------------------------|---------|----------|---------|---------|-------------------
+ PASS  tests/ttl-cache.spec.ts
+ PASS  tests/cacheable.decorator.spec.ts
+--------------------------------|---------|----------|---------|---------|-------------------
+File                            | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
+--------------------------------|---------|----------|---------|---------|-------------------
+All files                       |     100 |      100 |     100 |     100 |
+ src                            |     100 |      100 |     100 |     100 |
+  constants.ts                  |     100 |      100 |     100 |     100 |
+  ttl-cache.module.ts           |     100 |      100 |     100 |     100 |
+ src/decorators                 |     100 |      100 |     100 |     100 |
+  cacheable.decorator.ts        |     100 |      100 |     100 |     100 |
+  cached-async.decorator.ts     |     100 |      100 |     100 |     100 |
+  cached.decorator.ts           |     100 |      100 |     100 |     100 |
+  inject-ttl-cache.decorator.ts |     100 |      100 |     100 |     100 |
+ src/utils                      |     100 |      100 |     100 |     100 |
+  is-object.ts                  |     100 |      100 |     100 |     100 |
+  wrap-cache-key.ts             |     100 |      100 |     100 |     100 |
+--------------------------------|---------|----------|---------|---------|-------------------
 
 Test Suites: 5 passed, 5 total
-Tests:       73 passed, 73 total
+Tests:       74 passed, 74 total
 Snapshots:   0 total
-Time:        3.516 s, estimated 4 s
+Time:        4.111 s
 Ran all test suites.
-Done in 3.89s.
+Done in 4.59s.
+
 ```
 
 ## Support

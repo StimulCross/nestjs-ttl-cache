@@ -1,17 +1,18 @@
+import type * as TTLCache from '@isaacs/ttlcache';
 import { Logger } from '@nestjs/common';
 import { type NestApplication } from '@nestjs/core';
 import { Test } from '@nestjs/testing';
-import { TtlCache, TtlCacheModule } from '../src';
+import { TtlCacheModule } from '../src';
 import { CacheableTestService } from './test-app/cacheable-test.service';
 import { TestService } from './test-app/test.service';
-import { CACHE_INSTANCE_ID_PROPERTY } from '../src/constants';
+import { CACHE_INSTANCE_ID_PROPERTY, TTL_CACHE } from '../src/constants';
 import { wrapCacheKey } from '../src/utils';
 import { NonInjectableCacheService } from './test-app/non-ijectable-cache.service';
 import { sleep } from './test-app/utils/sleep';
 
 describe('Cached decorator test suite', () => {
 	let app: NestApplication;
-	let cache: TtlCache;
+	let cache: TTLCache<unknown, unknown>;
 
 	beforeEach(async () => {
 		const mod = await Test.createTestingModule({
@@ -20,7 +21,7 @@ describe('Cached decorator test suite', () => {
 		}).compile();
 
 		app = mod.createNestApplication();
-		cache = app.get(TtlCache);
+		cache = app.get(TTL_CACHE);
 
 		await app.init();
 	});

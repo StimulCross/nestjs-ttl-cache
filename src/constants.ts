@@ -1,3 +1,8 @@
+/**
+ * The token used to inject the TTLCache instance.
+ */
+export const TTL_CACHE = Symbol('TTL_CACHE');
+
 /** @internal */
 export const TTL_CACHE_OPTIONS = Symbol('TTL_CACHE:OPTIONS');
 
