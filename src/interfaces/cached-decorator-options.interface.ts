@@ -1,72 +1,84 @@
 import { type GetOptions, type SetOptions } from '@isaacs/ttlcache';
 
 /**
- * Options for {@link Cached} decorator.
+ * Options for the {@link Cached} decorator.
  *
- * These options will override similar options in {@link TtlCacheOptions} for specific method or getter.
+ * These options will override similar options in {@link TtlCacheOptions} for a specific method or getter.
  */
 export interface CachedDecoratorOptions extends GetOptions, SetOptions {
 	/**
 	 * Custom hash function.
 	 *
-	 * If the method has arguments you can use them to create a custom hash key.
+	 * If the method has arguments, you can use them to create a custom hash key.
 	 *
-	 * @param args Method arguments to create the cache key from. Must match the decorated method signature.
+	 * @param args Method arguments used to create the cache key. Must match the decorated method's signature.
 	 */
 	hashFunction?: (...args: any[]) => string;
 
 	/**
-	 * Uses {@link CacheArgumentOptions} passed as the last argument in the decorated method to control caching behavior
-	 * for one specific method call.
+	 * Allows the use of {@link CacheArgumentOptions} passed as the last argument in the decorated method
+	 * to control caching behavior for a specific method call.
 	 *
 	 * @default false
 	 */
+
 	useArgumentOptions?: boolean;
 
 	/**
-	 * Makes the decorated method to use the shared cache across all instances of the class.
+	 * Enables the decorated method to use a shared cache across all instances of the class.
 	 *
-	 * This is the default behavior unless you have applied {@link IsolatedCache} decorator on the class.
-	 * If you have applied {@link IsolatedCache} decorator, but you want to force some methods to use the shared cache
-	 * across all class instances, you can set this option to `true` to enable such behavior on the decorated method
-	 * level.
+	 * By default, this behavior is applied unless the class is decorated with the {@link IsolatedCache} decorator.
+	 * If the {@link IsolatedCache} decorator is applied but you want certain methods to use a shared cache
+	 * across all class instances, set this option to `true` to enforce the shared cache behavior at the method level.
 	 *
 	 * @default false
 	 */
 	useSharedCache?: boolean;
 
 	/**
-	 * Max time in milliseconds for items to live in cache before they are considered stale.
+	 * Maximum time (in milliseconds) for entries in the cache to live before they are considered stale.
 	 *
-	 * Note that stale items are NOT preemptively removed by default, and MAY live in the cache, contributing to max,
-	 * long after they have expired.
+	 * Must be an integer value representing milliseconds, or `Infinity`. Defaults to `undefined`, meaning TTL must
+	 * be explicitly set either in {@link TtlCacheOptions}, {@link CacheArgumentOptions}, or for each `set()` call.
 	 *
-	 * Must be an integer number of ms, or `Infinity`. Defaults to `undefined`, meaning that a TTL must be set
-	 * explicitly in {@link TtlCacheOptions}, {@link CacheArgumentOptions}, or for each `set()`.
+	 * When paired with {@link CachedDecoratorOptions#updateAgeOnGet} set to `true`, the TTL of the entry
+	 * will be updated when returning the cached result.
 	 *
-	 * Defaults to the value specified in the {@link TtlCacheOptions}.
+	 * Defaults to the value specified in {@link TtlCacheOptions}.
 	 */
 	ttl?: number;
 
 	/**
-	 * Set to `true` to suppress calling the `dispose()` function if the entry
-	 * key is still accessible within the cache.
+	 * Suppresses calling the `dispose()` function if the entry key is still accessible within the cache.
 	 *
-	 * Defaults to the value specified in the {@link TtlCacheOptions}
+	 * Defaults to the value specified in {@link TtlCacheOptions}.
 	 */
 	noDisposeOnSet?: boolean;
 
 	/**
-	 * Do not update the TTL when overwriting an existing item.
+	 * Prevents the TTL from being updated when an existing entry is overwritten.
 	 *
-	 * Defaults to the value specified in the {@link TtlCacheOptions}.
+	 * Defaults to the value specified in {@link TtlCacheOptions}.
 	 */
 	noUpdateTTL?: boolean;
 
 	/**
-	 * Whether the age of an item should be updated on retrieving.
+	 * Updates the age of a cache entry when it is accessed.
 	 *
-	 * Defaults to the value specified in the {@link TtlCacheOptions}.
+	 * When paired with {@link CachedDecoratorOptions#ttl}, the TTL of the entry is updated with the specified value
+	 * when retrieving a cached result.
+	 *
+	 * This can simulate a "least-recently used" (LRU) algorithm by refreshing the TTL of entries as they are used.
+	 *
+	 * Defaults to the value specified in {@link TtlCacheOptions}.
 	 */
 	updateAgeOnGet?: boolean;
+
+	/**
+	 * Deletes an entry if it is found to have exceeded its TTL before the `setTimeout` timer has fired to trigger
+	 * expiration.
+	 *
+	 * Defaults to the value specified in {@link TtlCacheOptions}.
+	 */
+	checkAgeOnGet?: boolean;
 }

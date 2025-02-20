@@ -1,14 +1,14 @@
 import { type GetOptions, type SetOptions } from '@isaacs/ttlcache';
 
 /**
- * Additional cache options to pass as the last argument to the method decorated with {@link Cached} /
- * {@link CachedAsync} decorator to be able to control caching behavior for one specific method call.
+ * Additional cache options to pass as the last argument to a method decorated with {@link Cached} or
+ * {@link CachedAsync}. These options allow control over caching behavior for a specific method call.
  *
- * These options will override similar options in {@link CachedDecoratorOptions} / {@link CachedAsyncDecoratorOptions}
- * and {@link LruCacheClientOptions}.
+ * These options override similar options in {@link CachedDecoratorOptions}, {@link CachedAsyncDecoratorOptions},
+ * and {@link TtlCacheOptions}.
  *
- * To enable argument options usage, set the `useArgumentOptions` in the {@link CachedDecoratorOptions} /
- * {@link CachedAsyncDecoratorOptions} to `true`. As the result, the last method argument will be treated as the cache
+ * To enable argument options, set `useArgumentOptions` in {@link CachedDecoratorOptions} or
+ * {@link CachedAsyncDecoratorOptions} to `true`. As a result, the last method argument will be treated as cache
  * options.
  *
  * @example
@@ -32,52 +32,61 @@ export interface CacheArgumentOptions extends GetOptions, SetOptions {
 	/**
 	 * Whether to return the cached value.
 	 *
-	 * Set this to `false` to ignore cached value and call the original method. The resulting value will replace the
-	 * previous one in the cache as usual.
+	 * Set this to `false` to ignore the cached value and call the original method. The result of the method will
+	 * replace the previous value in the cache as usual.
 	 *
 	 * @default true
 	 */
 	returnCached?: boolean;
 
 	/**
-	 * Makes the decorated method to use the shared cache across multiple class instances for one specific method call.
+	 * Enables the decorated method to use the shared cache across multiple class instances for a specific method call.
 	 *
-	 * This overrides `useSharedCache` specified in decorator options. To make this option work you must set
-	 * `useArgumentOptions` in {@link CachedDecoratorOptions} / {@link CachedAsyncDecoratorOptions} to `true`.
+	 * This option overrides `useSharedCache` specified in the decorator options. To enable this behavior, you must
+	 * set `useArgumentOptions` in {@link CachedDecoratorOptions} or {@link CachedAsyncDecoratorOptions} to `true`.
 	 */
 	useSharedCache?: boolean;
 
 	/**
-	 * Max time in milliseconds for items to live in cache before they are considered stale.
+	 * Maximum time (in milliseconds) for items to remain in the cache before being considered stale.
 	 *
-	 * Note that stale items are NOT preemptively removed by default, and MAY live in the cache, contributing to max,
-	 * long after they have expired.
+	 * Must be an integer value representing milliseconds, or `Infinity`. Defaults to `undefined`, meaning that a TTL
+	 * must be explicitly set for each `set()` call.
 	 *
-	 * Must be an integer number of ms, or `Infinity`. Defaults to `undefined`, meaning that a TTL must be set
-	 * explicitly for each `set()`.
-	 *
-	 * Defaults to the value specified in the {@link CachedDecoratorOptions} / {@link CachedAsyncDecoratorOptions}.
+	 * If not specified, defaults to the value provided in {@link CachedDecoratorOptions} or {@link CachedAsyncDecoratorOptions}.
 	 */
 	ttl?: number;
 
 	/**
-	 * Set to `true` to suppress calling the `dispose()` function if the entry key is still accessible within the cache.
+	 * Set to `true` to suppress calling the `dispose()` function if the entry key is still accessible within the
+	 * cache.
 	 *
-	 * Defaults to the value specified in the {@link CachedDecoratorOptions} or {@link TtlCacheOptions}
+	 * Defaults to the value specified in {@link CachedDecoratorOptions} or {@link TtlCacheOptions}.
 	 */
 	noDisposeOnSet?: boolean;
 
 	/**
-	 * Do not update the TTL when overwriting an existing item.
+	 * Prevents the TTL from being updated when overwriting an existing cache entry.
 	 *
-	 * Defaults to the value specified in {@link CachedDecoratorOptions} / {@link CachedAsyncDecoratorOptions}.
+	 * Defaults to the value specified in {@link CachedDecoratorOptions} or {@link CachedAsyncDecoratorOptions}.
 	 */
 	noUpdateTTL?: boolean;
 
 	/**
-	 * Whether the age of an entry should be updated on `has()`.
+	 * Updates the age of a cache entry when it is accessed.
 	 *
-	 * Defaults to the value specified in {@link CachedDecoratorOptions} / {@link CachedAsyncDecoratorOptions}.
+	 * When paired with {@link CacheArgumentOptions#ttl}, the TTL of the entry is updated with the specified value
+	 * when retrieving a cached result.
+	 *
+	 * Defaults to the value specified in {@link CachedDecoratorOptions} or {@link CachedAsyncDecoratorOptions}.
 	 */
 	updateAgeOnGet?: boolean;
+
+	/**
+	 * Deletes an entry if it is found to have exceeded its TTL before the `setTimeout` timer has fired to trigger
+	 * expiration.
+	 *
+	 * Defaults to the value specified in {@link TtlCacheOptions}.
+	 */
+	checkAgeOnGet?: boolean;
 }
