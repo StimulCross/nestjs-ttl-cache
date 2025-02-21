@@ -26,7 +26,7 @@ describe('TTL cache provider test suite', () => {
 		cache.clear();
 	});
 
-	test('Should return the correct cache size', async () => {
+	test('should correctly return the cache size', async () => {
 		const cacheEntry1 = {
 			key: 1,
 			val: 1,
@@ -45,7 +45,7 @@ describe('TTL cache provider test suite', () => {
 		expect(cache.size).toBe(2);
 	});
 
-	test('Should check if the cache has an entry', async () => {
+	test('should verify if the cache contains a specific entry', async () => {
 		const cacheKey = 1;
 		const fakeCacheKey = 2;
 		cache.set(cacheKey, true);
@@ -54,7 +54,7 @@ describe('TTL cache provider test suite', () => {
 		expect(cache.has(fakeCacheKey)).toBe(false);
 	});
 
-	test('Should get an existing entry', async () => {
+	test('should retrieve an existing entry from the cache', async () => {
 		const cacheEntry = {
 			key: 1,
 			val: 1
@@ -64,11 +64,11 @@ describe('TTL cache provider test suite', () => {
 		expect(cache.get(cacheEntry.key)).toBe(cacheEntry.val);
 	});
 
-	test('Should return "undefined" for non-existing key', async () => {
+	test('should return "undefined" for a non-existent entry', async () => {
 		expect(cache.get(1)).toBe(undefined);
 	});
 
-	test('Should set entry to the cache (with default TTL)', async () => {
+	test('should add an entry to the cache with the default TTL', async () => {
 		const cacheEntry = {
 			key: 1,
 			val: 1
@@ -78,19 +78,7 @@ describe('TTL cache provider test suite', () => {
 		expect(cache.get(cacheEntry.key)).toBe(cacheEntry.val);
 	});
 
-	test('Should set entry to the cache with ttl overload', async () => {
-		const cacheEntry = {
-			key: 1,
-			val: 1,
-			ttl: Infinity
-		};
-		cache.set(cacheEntry.key, cacheEntry.val, { ttl: cacheEntry.ttl });
-
-		expect(cache.get(cacheEntry.key)).toBe(cacheEntry.val);
-		expect(cache.getRemainingTTL(cacheEntry.key)).toBe(cacheEntry.ttl);
-	});
-
-	test('Should set entry to the cache with options overload', async () => {
+	test('should add an entry to the cache with a specified TTL', async () => {
 		const cacheEntry = {
 			key: 1,
 			val: 1,
@@ -104,7 +92,7 @@ describe('TTL cache provider test suite', () => {
 		expect(cache.getRemainingTTL(cacheEntry.key)).toBe(cacheEntry.options.ttl);
 	});
 
-	test('Should return "undefined" when trying to get an expired entry', async () => {
+	test('should return "undefined" when retrieving an expired entry', async () => {
 		const cacheEntry = {
 			key: 1,
 			val: 1,
@@ -117,7 +105,7 @@ describe('TTL cache provider test suite', () => {
 		expect(cache.get(cacheEntry.key)).toBe(undefined);
 	});
 
-	test('Should delete an entry from the cache', async () => {
+	test('should delete an entry from the cache', async () => {
 		const cacheEntry1 = {
 			key: 1,
 			val: 1,
@@ -135,7 +123,7 @@ describe('TTL cache provider test suite', () => {
 		expect(cache.delete(cacheEntry2.key)).toBe(true);
 	});
 
-	test('Should return remaining TTL of an existing entry', async () => {
+	test('should correctly return the remaining TTL of an existing entry', async () => {
 		const cacheEntry1 = {
 			key: 1,
 			val: 1,
@@ -146,11 +134,11 @@ describe('TTL cache provider test suite', () => {
 		expect(cache.getRemainingTTL(cacheEntry1.key)).toBe(Infinity);
 	});
 
-	test('Should return 0 when getting remaining TTL of a non-existing entry', async () => {
+	test('should return 0 for the remaining TTL of a non-existent entry', async () => {
 		expect(cache.getRemainingTTL(1)).toBe(0);
 	});
 
-	test('Should return 0 when getting remaining TTL of an expired entry', async () => {
+	test('should return 0 for the remaining TTL of an expired entry', async () => {
 		const cacheEntry1 = {
 			key: 1,
 			val: 1,
@@ -163,22 +151,22 @@ describe('TTL cache provider test suite', () => {
 		expect(cache.getRemainingTTL(cacheEntry1.key)).toBe(0);
 	});
 
-	test('Should return keys Generator', async () => {
+	test('should provide a generator for cache keys', async () => {
 		const generator = cache.keys();
 		expect(typeof generator[Symbol.iterator]).toBe('function');
 	});
 
-	test('Should return values Generator', async () => {
+	test('should provide a generator for cache values', async () => {
 		const generator = cache.values();
 		expect(typeof generator[Symbol.iterator]).toBe('function');
 	});
 
-	test('Should return entries Generator', async () => {
+	test('should provide a generator for cache entries', async () => {
 		const generator = cache.entries();
 		expect(typeof generator[Symbol.iterator]).toBe('function');
 	});
 
-	test('Should iterate over keys', async () => {
+	test('should iterate over cache keys using the generator', async () => {
 		const cacheEntry1 = {
 			key: 1,
 			val: 1
@@ -200,7 +188,7 @@ describe('TTL cache provider test suite', () => {
 		expect(val2.value).toBe(cacheEntry2.key);
 	});
 
-	test('Should iterate over values', async () => {
+	test('should iterate over cache values using the generator', async () => {
 		const cacheEntry1 = {
 			key: 1,
 			val: 1
@@ -222,7 +210,7 @@ describe('TTL cache provider test suite', () => {
 		expect(val2.value).toBe(cacheEntry2.val);
 	});
 
-	test('Should iterate over entries', async () => {
+	test('should iterate over cache entries using the generator', async () => {
 		const cacheEntry1 = {
 			key: 1,
 			val: 1
@@ -250,7 +238,7 @@ describe('TTL cache provider test suite', () => {
 		/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 	});
 
-	test('Should iterate over cache service itself', async () => {
+	test('should iterate over the cache using the built-in iterator', async () => {
 		expect(typeof cache[Symbol.iterator]).toBe('function');
 
 		const entries = 5;

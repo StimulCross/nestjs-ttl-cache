@@ -547,33 +547,32 @@ Available test commands: `test`, `test:verbose`, `test:cov`, `test:cov:verbose`.
 ```
  PASS  tests/cached-async.decorator.spec.ts
  PASS  tests/cached.decorator.spec.ts
- PASS  tests/ttl-cache.module.spec.ts
  PASS  tests/ttl-cache.spec.ts
+ PASS  tests/ttl-cache.module.spec.ts
  PASS  tests/isolated-cache.decorator.spec.ts
---------------------------------|---------|----------|---------|---------|-------------------
-File                            | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
---------------------------------|---------|----------|---------|---------|-------------------
-All files                       |     100 |      100 |     100 |     100 |
- src                            |     100 |      100 |     100 |     100 |
-  constants.ts                  |     100 |      100 |     100 |     100 |
-  ttl-cache.module.ts           |     100 |      100 |     100 |     100 |
- src/decorators                 |     100 |      100 |     100 |     100 |
-  isolated-cache.decorator.ts        |     100 |      100 |     100 |     100 |
-  cached-async.decorator.ts     |     100 |      100 |     100 |     100 |
-  cached.decorator.ts           |     100 |      100 |     100 |     100 |
-  inject-cache.decorator.ts |     100 |      100 |     100 |     100 |
- src/utils                      |     100 |      100 |     100 |     100 |
-  is-object.ts                  |     100 |      100 |     100 |     100 |
-  wrap-cache-key.ts             |     100 |      100 |     100 |     100 |
---------------------------------|---------|----------|---------|---------|-------------------
+------------------------------|---------|----------|---------|---------|-------------------
+File                          | % Stmts | % Branch | % Funcs | % Lines | Uncovered Line #s
+------------------------------|---------|----------|---------|---------|-------------------
+All files                     |     100 |      100 |     100 |     100 |
+ src                          |     100 |      100 |     100 |     100 |
+  constants.ts                |     100 |      100 |     100 |     100 |
+  ttl-cache.module.ts         |     100 |      100 |     100 |     100 |
+ src/decorators               |     100 |      100 |     100 |     100 |
+  cached-async.decorator.ts   |     100 |      100 |     100 |     100 |
+  cached.decorator.ts         |     100 |      100 |     100 |     100 |
+  inject-cache.decorator.ts   |     100 |      100 |     100 |     100 |
+  isolated-cache.decorator.ts |     100 |      100 |     100 |     100 |
+ src/utils                    |     100 |      100 |     100 |     100 |
+  is-object.ts                |     100 |      100 |     100 |     100 |
+  wrap-cache-key.ts           |     100 |      100 |     100 |     100 |
+------------------------------|---------|----------|---------|---------|-------------------
 
 Test Suites: 5 passed, 5 total
-Tests:       74 passed, 74 total
+Tests:       71 passed, 71 total
 Snapshots:   0 total
-Time:        4.111 s
+Time:        3.49 s, estimated 4 s
 Ran all test suites.
-Done in 4.59s.
-
+Done in 3.86s.
 ```
 
 ## Support

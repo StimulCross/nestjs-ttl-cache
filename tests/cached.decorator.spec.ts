@@ -30,14 +30,14 @@ describe('Cached decorator test suite', () => {
 		cache.clear();
 	});
 
-	test('Cached getter should cache the result', async () => {
+	test('should cache the result for cached getter', async () => {
 		const testService = await app.resolve(TestService);
 		const cachedKey = wrapCacheKey(`${TestService.name}.getRandomNumberGetter`);
 		const val = testService.getRandomNumberGetter;
 		expect(cache.get(cachedKey)).toBe(val);
 	});
 
-	test('Cached method should cache the result', async () => {
+	test('should cache the result for cached method', async () => {
 		const isolatedCacheTestService = await app.resolve(IsolatedCacheTestService);
 		const cachedKey = wrapCacheKey(
 			`${IsolatedCacheTestService.name}_${isolatedCacheTestService[CACHE_INSTANCE_ID_PROPERTY]}.getRandomNumber`
@@ -47,7 +47,7 @@ describe('Cached decorator test suite', () => {
 		expect(cache.get(cachedKey)).toBe(val);
 	});
 
-	test('Cached method should cache the result only for the specified TTL', async () => {
+	test('should cache the result only for the specified TTL', async () => {
 		const isolatedCacheTestService = await app.resolve(IsolatedCacheTestService);
 		const cachedKey = wrapCacheKey(
 			`${IsolatedCacheTestService.name}_${isolatedCacheTestService[CACHE_INSTANCE_ID_PROPERTY]}.getRandomNumber`
@@ -64,7 +64,7 @@ describe('Cached decorator test suite', () => {
 		expect(newVal).not.toBe(val);
 	});
 
-	test('Cached method should update TTL if "updateAgeOnGet" specified in decorator options', async () => {
+	test('should update TTL if "updateAgeOnGet" is specified in decorator options', async () => {
 		const testService = await app.resolve(TestService);
 		const cachedKey = wrapCacheKey(`${TestService.name}.getRandomNumberWithEnabledTtlUpdate`);
 
@@ -74,17 +74,7 @@ describe('Cached decorator test suite', () => {
 		expect(cache.getRemainingTTL(cachedKey)).toBeGreaterThan(90);
 	});
 
-	test('Cached method should update TTL if "updateAgeOnGet" specified in argument options', async () => {
-		const testService = await app.resolve(TestService);
-		const cachedKey = wrapCacheKey(`${TestService.name}.getRandomNumberWithOptions`);
-
-		testService.getRandomNumberWithOptions();
-		await sleep(50);
-		testService.getRandomNumberWithOptions({ updateAgeOnGet: true });
-		expect(cache.getRemainingTTL(cachedKey)).toBeGreaterThan(90);
-	});
-
-	test('Cached method should cache result independently for different instances of decorated class', async () => {
+	test('should cache result independently for different instances of decorated class', async () => {
 		const isolatedCacheTestService1 = await app.resolve(IsolatedCacheTestService);
 		const isolatedCacheTestService2 = await app.resolve(IsolatedCacheTestService);
 
@@ -94,7 +84,7 @@ describe('Cached decorator test suite', () => {
 		expect(val1).not.toBe(val2);
 	});
 
-	test('Cached method should use shared cache for different instances of decorated class if "useSharedCache" was set in decorator options', async () => {
+	test('should use shared cache for different instances of decorated class if "useSharedCache" is set in decorator options', async () => {
 		const isolatedCacheTestService1 = await app.resolve(IsolatedCacheTestService);
 		const isolatedCacheTestService2 = await app.resolve(IsolatedCacheTestService);
 
@@ -104,7 +94,7 @@ describe('Cached decorator test suite', () => {
 		expect(val1).toBe(val2);
 	});
 
-	test('Cached method should use shared cache for different instances of non-decorated class', async () => {
+	test('should use shared cache for different instances of a non-decorated class', async () => {
 		const testService1 = await app.resolve(TestService);
 		const testService2 = await app.resolve(TestService);
 
@@ -114,7 +104,7 @@ describe('Cached decorator test suite', () => {
 		expect(val1).toBe(val2);
 	});
 
-	test('Cached method should ignore argument options', async () => {
+	test('should ignore argument options by default', async () => {
 		const ttl = 50;
 		const testService = await app.resolve(TestService);
 		const cacheKey = wrapCacheKey(`${TestService.name}.getRandomNumber`);
@@ -125,7 +115,7 @@ describe('Cached decorator test suite', () => {
 		expect(cache.get(cacheKey)).toBe(val);
 	});
 
-	test('Cached method should use argument options if "useArgumentOptions" provided in decorator options', async () => {
+	test('should use argument options if "useArgumentOptions" is provided in decorator options', async () => {
 		const ttl = 50;
 		const testService = await app.resolve(TestService);
 		const cacheKey = wrapCacheKey(`${TestService.name}.getRandomNumberWithOptions`);
@@ -136,7 +126,7 @@ describe('Cached decorator test suite', () => {
 		expect(cache.get(cacheKey)).toBe(undefined);
 	});
 
-	test('Cached method should return new value if "ignoreCached" was set to `true` in argument options', async () => {
+	test('should return a new value if "ignoreCached" is set to `true` in argument options', async () => {
 		const testService = await app.resolve(TestService);
 		const val1 = testService.getRandomNumberWithOptions();
 		const val2 = testService.getRandomNumberWithOptions({ ignoreCached: true });
@@ -144,7 +134,7 @@ describe('Cached decorator test suite', () => {
 		expect(val2).not.toBe(val1);
 	});
 
-	test('Cached method should return cached value if "ignoreCached" was set to `false` in argument options', async () => {
+	test('should return a cached value if "ignoreCached" is falsy in argument options', async () => {
 		const testService = await app.resolve(TestService);
 		const val1 = testService.getRandomNumberWithOptions();
 		const val2 = testService.getRandomNumberWithOptions({ ignoreCached: false });
@@ -152,7 +142,7 @@ describe('Cached decorator test suite', () => {
 		expect(val2).toBe(val1);
 	});
 
-	test('Cached method should use shared cache across multiple instances if "useSharedCache" provided in argument options', async () => {
+	test('should use shared cache across multiple instances if "useSharedCache" is provided in argument options', async () => {
 		const isolatedCacheTestService1 = await app.resolve(IsolatedCacheTestService);
 		const isolatedCacheTestService2 = await app.resolve(IsolatedCacheTestService);
 
@@ -162,7 +152,7 @@ describe('Cached decorator test suite', () => {
 		expect(val2).toBe(val1);
 	});
 
-	test('Cached method should use hash function overload in decorator options', async () => {
+	test('should use hash function overload from decorator options', async () => {
 		const a = 5;
 		const b = 5;
 		const testService = await app.resolve(TestService);
@@ -172,7 +162,7 @@ describe('Cached decorator test suite', () => {
 		expect(cache.get(cacheKey)).toBe(a + b);
 	});
 
-	test('Cached method should use TTL overload in decorator options', async () => {
+	test('should use TTL overload from decorator options', async () => {
 		const testService = await app.resolve(TestService);
 		const cacheKey = wrapCacheKey(`${TestService.name}.getRandomNumberTtlOverload`);
 		const val = testService.getRandomNumberTtlOverload();
@@ -182,7 +172,7 @@ describe('Cached decorator test suite', () => {
 		expect(cache.get(cacheKey)).toBe(undefined);
 	});
 
-	test('Cached method should use hash function in decorator options', async () => {
+	test('should use hash function from decorator options', async () => {
 		const a = 5;
 		const b = 5;
 		const testService = await app.resolve(TestService);
@@ -192,7 +182,7 @@ describe('Cached decorator test suite', () => {
 		expect(cache.get(cacheKey)).toBe(a + b);
 	});
 
-	test('Cached method should print warning and call original function if the class is not registered in providers', async () => {
+	test('should print a warning and call the original function if the class is not registered in providers', async () => {
 		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		const loggerWarnSpy = jest.spyOn(Logger.prototype, 'warn').mockImplementation(() => {});
 

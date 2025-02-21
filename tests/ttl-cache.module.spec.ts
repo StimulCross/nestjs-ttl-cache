@@ -47,11 +47,11 @@ describe('TTL cache module test suite', () => {
 			await app.init();
 		});
 
-		test('TTL cache options should be defined', () => {
+		test('should define TTL cache options', () => {
 			testCacheOptions(app.get<TtlCacheOptions>(TTL_CACHE_OPTIONS), max, ttl);
 		});
 
-		test('TTL cache instance should be defined', () => {
+		test('should define TTL cache instance', () => {
 			testCacheInstance(app.get(TTL_CACHE));
 		});
 	});
@@ -69,11 +69,11 @@ describe('TTL cache module test suite', () => {
 			await app.init();
 		});
 
-		test('TTL cache options should be defined', () => {
+		test('should define TTL cache options', () => {
 			testCacheOptions(app.get<TtlCacheOptions>(TTL_CACHE_OPTIONS));
 		});
 
-		test('TTL cache instance should be defined', () => {
+		test('should define TTL cache instance', () => {
 			testCacheInstance(app.get(TTL_CACHE));
 		});
 	});
@@ -88,7 +88,7 @@ describe('TTL cache module test suite', () => {
 			testCacheInstance(app.get(TTL_CACHE));
 		};
 
-		test('TTL cache options should be resolved with "useClass"', async () => {
+		test('should resolve TTL cache options using "useClass"', async () => {
 			const TestingModule = await Test.createTestingModule({
 				imports: [
 					TtlCacheModule.registerAsync({
@@ -102,7 +102,7 @@ describe('TTL cache module test suite', () => {
 			await testModule(app);
 		});
 
-		test('TTL cache options should be resolved with "useExisting"', async () => {
+		test('should resolve TTL cache options using "useExisting"', async () => {
 			const TestingModule = await Test.createTestingModule({
 				imports: [
 					TtlCacheModule.registerAsync({
@@ -116,7 +116,7 @@ describe('TTL cache module test suite', () => {
 			await testModule(app);
 		});
 
-		test('TTL cache options should be resolved with "useFactory"', async () => {
+		test('should resolve TTL cache options using "useFactory"', async () => {
 			const createOptions = async (): Promise<TtlCacheOptions> => {
 				return { max, ttl };
 			};
@@ -128,7 +128,7 @@ describe('TTL cache module test suite', () => {
 			await testModule(app);
 		});
 
-		test('TTL cache imports should be injected to "useFactory"', async () => {
+		test('should inject dependencies to "useFactory" for TTL cache module', async () => {
 			const createOptions = async (factory: TtlCacheFactory): Promise<TtlCacheOptions> => {
 				expect(factory).toBeInstanceOf(TtlCacheFactory);
 				return { max, ttl };
@@ -163,7 +163,7 @@ describe('TTL cache module test suite', () => {
 			await app.init();
 		});
 
-		test('TTLCache instance should be injected using @InjectCache decorator', () => {
+		test('should inject TTLCache instance using @InjectCache decorator', () => {
 			const cacheConsumer = app.get(CacheConsumer);
 			testCacheInstance(cacheConsumer.getCache());
 		});
