@@ -30,14 +30,12 @@ import { type GetOptions, type SetOptions } from '@isaacs/ttlcache';
  */
 export interface CacheArgumentOptions extends GetOptions, SetOptions {
 	/**
-	 * Whether to return the cached value.
+	 * Whether to ignore the cached value.
 	 *
-	 * Set this to `false` to ignore the cached value and call the original method. The result of the method will
+	 * Set this to `true` to ignore the cached value and call the original method. The result of the method will
 	 * replace the previous value in the cache as usual.
-	 *
-	 * @default true
 	 */
-	returnCached?: boolean;
+	ignoreCached?: boolean;
 
 	/**
 	 * Enables the decorated method to use the shared cache across multiple class instances for a specific method call.

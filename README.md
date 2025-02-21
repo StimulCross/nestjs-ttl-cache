@@ -480,7 +480,7 @@ The `@CachedAsync` decorator supports all the [options](#cached-options) availab
 
 ```ts
 interface CacheArgumentOptions {
-	returnCached?: boolean;
+	ignoreCached?: boolean;
 	useSharedCache?: boolean;
 
 	// The options below are inherited from the underlying library's options
@@ -496,7 +496,7 @@ Argument options allow you to modify the caching behavior for a **single method 
 
 Some of these options will override the corresponding settings defined in the decorator's [options]
 
-- `returnCached` – Specifies whether to return the cached value. When set to `false`, the original method is executed regardless of a cached result, and the new result then replaces the cached one. The default value is `true`.
+- `ignoreCached` – Specifies whether to ignore the cached value. When set to `true`, the original method is executed regardless of a cached result, and the new result then replaces the cached one. The default value is `false`.
 - `useSharedCache` – Determines if a specific method call should use a shared cache across multiple class instances, even when the [@IsolatedCache](#isolatedcache) decorator is applied to the class. By default, it adopts the value defined in the [@Cached decorator options](#cached-options).
 
 > [!IMPORTANT]
@@ -531,8 +531,8 @@ anyCustomProvider.getRandomNumber();
 anyCustomProvider.getRandomNumber();
 // ->  0.19166009286482677
 
-// Providing { returnCached: false } bypasses the cache and fetches a new value:
-anyCustomProvider.getRandomNumber({ returnCached: false });
+// Providing { ignoreCached: true } bypasses the cache and fetches a new value:
+anyCustomProvider.getRandomNumber({ ignoreCached: true });
 // ->  0.24774185142387612
 ```
 
