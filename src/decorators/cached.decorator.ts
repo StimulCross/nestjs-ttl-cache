@@ -10,7 +10,7 @@ function createCachedFunction(
 	target: object,
 	propertyKey: string | symbol,
 	origFn: Function,
-	options: CachedDecoratorOptions
+	options: CachedDecoratorOptions,
 ) {
 	return function (
 		this: { [CACHE_INSTANCE_ID_PROPERTY]?: number; [CACHE_INSTANCE]?: TTLCache<unknown, unknown> },
@@ -19,8 +19,8 @@ function createCachedFunction(
 		if (!this[CACHE_INSTANCE]) {
 			logger.warn(
 				`Failed to get the cache instance in method ${target.constructor.name}.${String(
-					propertyKey
-				)}(). This may be because the class using the @Cached decorator has not been registered as a provider in the NestJS module, and therefore is not available in the DI container. This method's results will not be cached.`
+					propertyKey,
+				)}(). This may be because the class using the @Cached decorator has not been registered as a provider in the NestJS module, and therefore is not available in the DI container. This method's results will not be cached.`,
 			);
 			return origFn.apply(this, args) as Promise<unknown>;
 		}
@@ -91,7 +91,7 @@ export function Cached(
 	optionsOrHashFunctionOtTtl:
 		| CachedDecoratorOptions
 		| CachedDecoratorOptions['ttl']
-		| CachedDecoratorOptions['hashFunction'] = {}
+		| CachedDecoratorOptions['hashFunction'] = {},
 ): MethodDecorator {
 	const injectCache = Inject(TTL_CACHE);
 
@@ -110,7 +110,6 @@ export function Cached(
 		if (typeof descriptor.value === 'function') {
 			descriptor.value = createCachedFunction(target, propertyKey, descriptor.value, options);
 		} else if (typeof descriptor.get === 'function') {
-			// eslint-disable-next-line @typescript-eslint/unbound-method
 			descriptor.get = createCachedFunction(target, propertyKey, descriptor.get, options);
 		}
 

@@ -9,19 +9,19 @@ describe('IsolatedCache decorator test suite', () => {
 	let app: NestApplication;
 
 	beforeEach(async () => {
-		const TestingModule = await Test.createTestingModule({
+		const testingModule = await Test.createTestingModule({
 			imports: [TtlCacheModule.register({ isGlobal: true })],
-			providers: [IsolatedCacheTestService]
+			providers: [IsolatedCacheTestService],
 		}).compile();
 
-		app = TestingModule.createNestApplication();
+		app = testingModule.createNestApplication();
 
 		await app.init();
 	});
 
 	test('should have a static "__CACHE_INSTANCES__" property on isolated cache class', async () => {
 		expect(Object.getOwnPropertySymbols(Object.getPrototypeOf(IsolatedCacheTestService))).toContain(
-			CACHE_INSTANCES_PROPERTY
+			CACHE_INSTANCES_PROPERTY,
 		);
 		expect(typeof IsolatedCacheTestService[CACHE_INSTANCES_PROPERTY]).toBe('number');
 	});
@@ -42,7 +42,7 @@ describe('IsolatedCache decorator test suite', () => {
 	test('should set the "__CACHE_INSTANCE_ID__" property equal to the static "__CACHE_INSTANCES__" property on the instance', async () => {
 		const isolatedCacheTestService = await app.resolve(IsolatedCacheTestService);
 		expect(IsolatedCacheTestService[CACHE_INSTANCES_PROPERTY]).toBe(
-			isolatedCacheTestService[CACHE_INSTANCE_ID_PROPERTY]
+			isolatedCacheTestService[CACHE_INSTANCE_ID_PROPERTY],
 		);
 	});
 

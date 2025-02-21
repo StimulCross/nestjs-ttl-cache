@@ -38,11 +38,11 @@ describe('TTL cache module test suite', () => {
 		const ttl = 5000;
 
 		beforeAll(async () => {
-			const TestingModule = await Test.createTestingModule({
-				imports: [TtlCacheModule.register({ isGlobal: true, max, ttl })]
+			const testingModule = await Test.createTestingModule({
+				imports: [TtlCacheModule.register({ isGlobal: true, max, ttl })],
 			}).compile();
 
-			app = TestingModule.createNestApplication();
+			app = testingModule.createNestApplication();
 
 			await app.init();
 		});
@@ -60,11 +60,11 @@ describe('TTL cache module test suite', () => {
 		let app: NestApplication;
 
 		beforeAll(async () => {
-			const TestingModule = await Test.createTestingModule({
-				imports: [TtlCacheModule.register()]
+			const testingModule = await Test.createTestingModule({
+				imports: [TtlCacheModule.register()],
 			}).compile();
 
-			app = TestingModule.createNestApplication();
+			app = testingModule.createNestApplication();
 
 			await app.init();
 		});
@@ -79,8 +79,8 @@ describe('TTL cache module test suite', () => {
 	});
 
 	describe('TTL cache async options', () => {
-		const max = 10000;
-		const ttl = 50000;
+		const max = 10_000;
+		const ttl = 50_000;
 
 		const testModule = async (app: INestApplication): Promise<void> => {
 			await app.init();
@@ -89,42 +89,40 @@ describe('TTL cache module test suite', () => {
 		};
 
 		test('should resolve TTL cache options using "useClass"', async () => {
-			const TestingModule = await Test.createTestingModule({
+			const testingModule = await Test.createTestingModule({
 				imports: [
 					TtlCacheModule.registerAsync({
 						isGlobal: true,
 						imports: [TtlCacheOptionsFactoryModule],
-						useClass: TtlCacheFactory
-					})
-				]
+						useClass: TtlCacheFactory,
+					}),
+				],
 			}).compile();
-			const app = TestingModule.createNestApplication();
+			const app = testingModule.createNestApplication();
 			await testModule(app);
 		});
 
 		test('should resolve TTL cache options using "useExisting"', async () => {
-			const TestingModule = await Test.createTestingModule({
+			const testingModule = await Test.createTestingModule({
 				imports: [
 					TtlCacheModule.registerAsync({
 						isGlobal: true,
 						imports: [TtlCacheOptionsFactoryModule],
-						useExisting: TtlCacheFactory
-					})
-				]
+						useExisting: TtlCacheFactory,
+					}),
+				],
 			}).compile();
-			const app = TestingModule.createNestApplication();
+			const app = testingModule.createNestApplication();
 			await testModule(app);
 		});
 
 		test('should resolve TTL cache options using "useFactory"', async () => {
-			const createOptions = async (): Promise<TtlCacheOptions> => {
-				return { max, ttl };
-			};
+			const createOptions = async (): Promise<TtlCacheOptions> => ({ max, ttl });
 
-			const TestingModule = await Test.createTestingModule({
-				imports: [TtlCacheModule.registerAsync({ isGlobal: true, useFactory: createOptions })]
+			const testingModule = await Test.createTestingModule({
+				imports: [TtlCacheModule.registerAsync({ isGlobal: true, useFactory: createOptions })],
 			}).compile();
-			const app = TestingModule.createNestApplication();
+			const app = testingModule.createNestApplication();
 			await testModule(app);
 		});
 
@@ -134,17 +132,17 @@ describe('TTL cache module test suite', () => {
 				return { max, ttl };
 			};
 
-			const TestingModule = await Test.createTestingModule({
+			const testingModule = await Test.createTestingModule({
 				imports: [
 					TtlCacheModule.registerAsync({
 						isGlobal: true,
 						imports: [TtlCacheOptionsFactoryModule],
 						inject: [TtlCacheFactory],
-						useFactory: createOptions
-					})
-				]
+						useFactory: createOptions,
+					}),
+				],
 			}).compile();
-			const app = TestingModule.createNestApplication();
+			const app = testingModule.createNestApplication();
 			await testModule(app);
 		});
 	});
@@ -153,12 +151,12 @@ describe('TTL cache module test suite', () => {
 		let app: NestApplication;
 
 		beforeAll(async () => {
-			const TestingModule = await Test.createTestingModule({
+			const testingModule = await Test.createTestingModule({
 				imports: [TtlCacheModule.register()],
-				providers: [CacheConsumer]
+				providers: [CacheConsumer],
 			}).compile();
 
-			app = TestingModule.createNestApplication();
+			app = testingModule.createNestApplication();
 
 			await app.init();
 		});

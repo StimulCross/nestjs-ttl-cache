@@ -17,7 +17,7 @@ describe('Cached decorator test suite', () => {
 	beforeEach(async () => {
 		const mod = await Test.createTestingModule({
 			imports: [TtlCacheModule.register({ isGlobal: true, ttl: 1000, max: 1000 })],
-			providers: [IsolatedCacheTestService, TestService]
+			providers: [IsolatedCacheTestService, TestService],
 		}).compile();
 
 		app = mod.createNestApplication();
@@ -40,7 +40,7 @@ describe('Cached decorator test suite', () => {
 	test('should cache the result for cached method', async () => {
 		const isolatedCacheTestService = await app.resolve(IsolatedCacheTestService);
 		const cachedKey = wrapCacheKey(
-			`${IsolatedCacheTestService.name}_${isolatedCacheTestService[CACHE_INSTANCE_ID_PROPERTY]}.getRandomNumber`
+			`${IsolatedCacheTestService.name}_${isolatedCacheTestService[CACHE_INSTANCE_ID_PROPERTY]}.getRandomNumber`,
 		);
 
 		const val = isolatedCacheTestService.getRandomNumber();
@@ -50,7 +50,7 @@ describe('Cached decorator test suite', () => {
 	test('should cache the result only for the specified TTL', async () => {
 		const isolatedCacheTestService = await app.resolve(IsolatedCacheTestService);
 		const cachedKey = wrapCacheKey(
-			`${IsolatedCacheTestService.name}_${isolatedCacheTestService[CACHE_INSTANCE_ID_PROPERTY]}.getRandomNumber`
+			`${IsolatedCacheTestService.name}_${isolatedCacheTestService[CACHE_INSTANCE_ID_PROPERTY]}.getRandomNumber`,
 		);
 
 		const val = isolatedCacheTestService.getRandomNumber();
@@ -183,7 +183,6 @@ describe('Cached decorator test suite', () => {
 	});
 
 	test('should print a warning and call the original function if the class is not registered in providers', async () => {
-		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		const loggerWarnSpy = jest.spyOn(Logger.prototype, 'warn').mockImplementation(() => {});
 
 		const service = new NonInjectableCacheService();
@@ -192,8 +191,8 @@ describe('Cached decorator test suite', () => {
 		expect(loggerWarnSpy).toHaveBeenCalledTimes(1);
 		expect(loggerWarnSpy).toHaveBeenCalledWith(
 			expect.stringContaining(
-				'Failed to get the cache instance in method NonInjectableCacheService.getRandomNumber()'
-			)
+				'Failed to get the cache instance in method NonInjectableCacheService.getRandomNumber()',
+			),
 		);
 
 		loggerWarnSpy.mockRestore();

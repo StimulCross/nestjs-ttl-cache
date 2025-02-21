@@ -69,9 +69,9 @@ import { TtlCacheModule } from 'nestjs-ttl-cache';
 		TtlCacheModule.register({
 			isGlobal: true,
 			max: 10000,
-			ttl: 10000
-		})
-	]
+			ttl: 10000,
+		}),
+	],
 })
 export class AppModule {}
 ```
@@ -86,7 +86,7 @@ import { TtlCacheModule, TtlCacheOptions } from 'nestjs-ttl-cache';
 	imports: [
 		ConfigModule.register({
 			isGlobal: true,
-			cache: true
+			cache: true,
 		}),
 		TtlCacheModule.registerAsync({
 			isGlobal: true,
@@ -94,11 +94,11 @@ import { TtlCacheModule, TtlCacheOptions } from 'nestjs-ttl-cache';
 			useFactory: async (configService: ConfigService): Promise<TtlCacheOptions> => {
 				return {
 					max: Number(configService.get('CACHE_MAX')),
-					ttl: Number(configService.get('CACHE_TTL'))
+					ttl: Number(configService.get('CACHE_TTL')),
 				};
-			}
-		})
-	]
+			},
+		}),
+	],
 })
 export class AppModule {}
 ```
@@ -122,7 +122,7 @@ export class OptionsFactory implements TtlCacheOptionsFactory {
 	createTtlCacheOptions(): TtlCacheOptions {
 		return {
 			max: 10000,
-			ttl: 10000
+			ttl: 10000,
 		};
 	}
 }
@@ -141,9 +141,9 @@ import { TtlCacheModule } from 'nestjs-ttl-cache';
 		OptionsFactoryModule,
 		TtlCacheModule.registerAsync({
 			isGlobal: true,
-			useExisting: OptionsFactory
-		})
-	]
+			useExisting: OptionsFactory,
+		}),
+	],
 })
 export class AppModule {}
 ```

@@ -12,11 +12,11 @@ describe('TTL cache provider test suite', () => {
 	const ttl = 5000;
 
 	beforeAll(async () => {
-		const TestingModule = await Test.createTestingModule({
-			imports: [TtlCacheModule.register({ isGlobal: true, max, ttl })]
+		const testingModule = await Test.createTestingModule({
+			imports: [TtlCacheModule.register({ isGlobal: true, max, ttl })],
 		}).compile();
 
-		app = TestingModule.createNestApplication();
+		app = testingModule.createNestApplication();
 		cache = app.get(TTL_CACHE);
 
 		await app.init();
@@ -30,12 +30,12 @@ describe('TTL cache provider test suite', () => {
 		const cacheEntry1 = {
 			key: 1,
 			val: 1,
-			ttl: Infinity
+			ttl: Infinity,
 		};
 		const cacheEntry2 = {
 			key: 2,
 			val: 2,
-			ttl: Infinity
+			ttl: Infinity,
 		};
 
 		cache.set(cacheEntry1.key, cacheEntry1.val, { ttl: cacheEntry1.ttl });
@@ -57,7 +57,7 @@ describe('TTL cache provider test suite', () => {
 	test('should retrieve an existing entry from the cache', async () => {
 		const cacheEntry = {
 			key: 1,
-			val: 1
+			val: 1,
 		};
 		cache.set(cacheEntry.key, cacheEntry.val);
 
@@ -71,7 +71,7 @@ describe('TTL cache provider test suite', () => {
 	test('should add an entry to the cache with the default TTL', async () => {
 		const cacheEntry = {
 			key: 1,
-			val: 1
+			val: 1,
 		};
 		cache.set(cacheEntry.key, cacheEntry.val);
 
@@ -83,8 +83,8 @@ describe('TTL cache provider test suite', () => {
 			key: 1,
 			val: 1,
 			options: {
-				ttl: Infinity
-			}
+				ttl: Infinity,
+			},
 		};
 		cache.set(cacheEntry.key, cacheEntry.val, cacheEntry.options);
 
@@ -96,7 +96,7 @@ describe('TTL cache provider test suite', () => {
 		const cacheEntry = {
 			key: 1,
 			val: 1,
-			ttl: 10
+			ttl: 10,
 		};
 		cache.set(cacheEntry.key, cacheEntry.val, { ttl: cacheEntry.ttl });
 
@@ -109,12 +109,12 @@ describe('TTL cache provider test suite', () => {
 		const cacheEntry1 = {
 			key: 1,
 			val: 1,
-			ttl: Infinity
+			ttl: Infinity,
 		};
 		const cacheEntry2 = {
 			key: 2,
 			val: 2,
-			ttl: 100
+			ttl: 100,
 		};
 		cache.set(cacheEntry1.key, cacheEntry1.val, { ttl: cacheEntry1.ttl });
 		cache.set(cacheEntry2.key, cacheEntry2.val, { ttl: cacheEntry2.ttl });
@@ -127,7 +127,7 @@ describe('TTL cache provider test suite', () => {
 		const cacheEntry1 = {
 			key: 1,
 			val: 1,
-			ttl: Infinity
+			ttl: Infinity,
 		};
 		cache.set(cacheEntry1.key, cacheEntry1.val, { ttl: cacheEntry1.ttl });
 
@@ -142,7 +142,7 @@ describe('TTL cache provider test suite', () => {
 		const cacheEntry1 = {
 			key: 1,
 			val: 1,
-			ttl: 10
+			ttl: 10,
 		};
 		cache.set(cacheEntry1.key, cacheEntry1.val, { ttl: cacheEntry1.ttl });
 
@@ -169,11 +169,11 @@ describe('TTL cache provider test suite', () => {
 	test('should iterate over cache keys using the generator', async () => {
 		const cacheEntry1 = {
 			key: 1,
-			val: 1
+			val: 1,
 		};
 		const cacheEntry2 = {
 			key: 2,
-			val: 2
+			val: 2,
 		};
 
 		cache.set(cacheEntry1.key, cacheEntry1.val);
@@ -191,11 +191,11 @@ describe('TTL cache provider test suite', () => {
 	test('should iterate over cache values using the generator', async () => {
 		const cacheEntry1 = {
 			key: 1,
-			val: 1
+			val: 1,
 		};
 		const cacheEntry2 = {
 			key: 2,
-			val: 2
+			val: 2,
 		};
 
 		cache.set(cacheEntry1.key, cacheEntry1.val);
@@ -213,11 +213,11 @@ describe('TTL cache provider test suite', () => {
 	test('should iterate over cache entries using the generator', async () => {
 		const cacheEntry1 = {
 			key: 1,
-			val: 1
+			val: 1,
 		};
 		const cacheEntry2 = {
 			key: 2,
-			val: 2
+			val: 2,
 		};
 
 		cache.set(cacheEntry1.key, cacheEntry1.val);
@@ -225,7 +225,6 @@ describe('TTL cache provider test suite', () => {
 
 		const generator = cache.entries();
 
-		/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 		const entry1 = generator.next();
 		expect(Array.isArray(entry1.value)).toBe(true);
 		expect(entry1.value[0]).toBe(cacheEntry1.key);
@@ -235,7 +234,6 @@ describe('TTL cache provider test suite', () => {
 		expect(Array.isArray(entry2.value)).toBe(true);
 		expect(entry2.value[0]).toBe(cacheEntry2.key);
 		expect(entry2.value[1]).toBe(cacheEntry2.val);
-		/* eslint-disable @typescript-eslint/no-unsafe-member-access */
 	});
 
 	test('should iterate over the cache using the built-in iterator', async () => {

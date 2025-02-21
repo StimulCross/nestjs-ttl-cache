@@ -3,7 +3,7 @@ export { TtlCacheOptionsFactory } from './ttl-cache-options-factory.interface';
 export {
 	TtlCacheModuleOptions,
 	TtlCacheAsyncModuleOptions,
-	TtlCacheModuleExtraOptions
+	TtlCacheModuleExtraOptions,
 } from './ttl-cache-module-options.interface';
 export { CachedDecoratorOptions } from './cached-decorator-options.interface';
 export { CachedAsyncDecoratorOptions } from './cached-async-decorator-options.interface';

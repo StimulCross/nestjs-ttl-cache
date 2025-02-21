@@ -5,7 +5,7 @@ import {
 	type TtlCacheAsyncModuleOptions,
 	type TtlCacheModuleOptions,
 	type TtlCacheOptions,
-	type TtlCacheOptionsFactory
+	type TtlCacheOptionsFactory,
 } from './interfaces';
 
 /**
@@ -25,19 +25,19 @@ export class TtlCacheModule {
 	public static register(options: TtlCacheModuleOptions = {}): DynamicModule {
 		const optionsProvider: Provider<TtlCacheModuleOptions> = {
 			provide: TTL_CACHE_OPTIONS,
-			useValue: options
+			useValue: options,
 		};
 
 		const ttlCache: Provider<TTLCache<any, any>> = {
 			provide: TTL_CACHE,
-			useValue: new TTLCache(options)
+			useValue: new TTLCache(options),
 		};
 
 		return {
 			global: options.isGlobal,
 			module: TtlCacheModule,
 			providers: [optionsProvider, ttlCache],
-			exports: [TTL_CACHE]
+			exports: [TTL_CACHE],
 		};
 	}
 
@@ -52,7 +52,7 @@ export class TtlCacheModule {
 		const ttlCache: Provider<TTLCache<any, any>> = {
 			provide: TTL_CACHE,
 			useFactory: (cacheOptions: TtlCacheOptions) => new TTLCache(cacheOptions),
-			inject: [TTL_CACHE_OPTIONS]
+			inject: [TTL_CACHE_OPTIONS],
 		};
 
 		return {
@@ -60,7 +60,7 @@ export class TtlCacheModule {
 			imports: options.imports ?? [],
 			module: TtlCacheModule,
 			providers: [...TtlCacheModule._createOptionsProviders(options), ttlCache],
-			exports: [TTL_CACHE]
+			exports: [TTL_CACHE],
 		};
 	}
 
@@ -73,8 +73,8 @@ export class TtlCacheModule {
 			TtlCacheModule._createOptionsProvider(options),
 			{
 				provide: options.useClass!,
-				useClass: options.useClass!
-			}
+				useClass: options.useClass!,
+			},
 		];
 	}
 
@@ -83,14 +83,14 @@ export class TtlCacheModule {
 			return {
 				provide: TTL_CACHE_OPTIONS,
 				useFactory: options.useFactory,
-				inject: options.inject ?? []
+				inject: options.inject ?? [],
 			};
 		}
 
 		return {
 			provide: TTL_CACHE_OPTIONS,
 			useFactory: async (factory: TtlCacheOptionsFactory) => await factory.createTtlCacheOptions(),
-			inject: [options.useExisting ?? options.useClass!]
+			inject: [options.useExisting ?? options.useClass!],
 		};
 	}
 }

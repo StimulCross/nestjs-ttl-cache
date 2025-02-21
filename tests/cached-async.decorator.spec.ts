@@ -16,7 +16,7 @@ describe('Cached async decorator test suite', () => {
 	beforeEach(async () => {
 		const mod = await Test.createTestingModule({
 			imports: [TtlCacheModule.register({ isGlobal: true, ttl: 1000, max: 1000 })],
-			providers: [IsolatedCacheTestService, TestService]
+			providers: [IsolatedCacheTestService, TestService],
 		}).compile();
 
 		app = mod.createNestApplication();
@@ -249,7 +249,6 @@ describe('Cached async decorator test suite', () => {
 	});
 
 	test('should print a warning and call the original function if the class is not registered in providers', async () => {
-		// eslint-disable-next-line @typescript-eslint/no-empty-function
 		const loggerWarnSpy = jest.spyOn(Logger.prototype, 'warn').mockImplementation(() => {});
 
 		const service = new NonInjectableCacheService();
@@ -258,8 +257,8 @@ describe('Cached async decorator test suite', () => {
 		expect(loggerWarnSpy).toHaveBeenCalledTimes(1);
 		expect(loggerWarnSpy).toHaveBeenCalledWith(
 			expect.stringContaining(
-				'Failed to get the cache instance in method NonInjectableCacheService.getRandomNumberAsync()'
-			)
+				'Failed to get the cache instance in method NonInjectableCacheService.getRandomNumberAsync()',
+			),
 		);
 
 		loggerWarnSpy.mockRestore();

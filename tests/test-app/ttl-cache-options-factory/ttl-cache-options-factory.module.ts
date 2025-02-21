@@ -3,6 +3,6 @@ import { TtlCacheFactory } from './ttl-cache-options-factory';
 
 @Module({
 	providers: [TtlCacheFactory],
-	exports: [TtlCacheFactory]
+	exports: [TtlCacheFactory],
 })
 export class TtlCacheOptionsFactoryModule {}
