@@ -455,11 +455,12 @@ The resolved value of the promise is also cached for the specified TTL. For inst
 
 ```ts
 interface CachedAsyncDecoratorOptions {
-	cachePromise?: boolean;
-	cachePromiseResult?: boolean;
 	hashFunction?: (...args: any[]) => string;
 	useArgumentOptions?: boolean;
 	useSharedCache?: boolean;
+	cachePromise?: boolean;
+	cachePromiseResult?: boolean;
+	deleteRejectedPromise?: boolean;
 
 	// The options below are inherited from the underlying library's options
 	ttl?: number;
@@ -476,12 +477,15 @@ The `@CachedAsync` decorator supports all the [options](#cached-options) availab
 
 - `cachePromiseResult` - Specifies whether to cache the result of the promise. When set to `false`, the promise is removed from the cache once it resolves, and its result is not stored. The default value is `true`.
 
+- `deleteRejectedPromise` - Determines whether to delete a rejected Promise from the cache. If a cached Promise is rejected (fails to resolve), it will normally remain in the cache for the specified TTL, meaning any subsequent calls with the same cache key will return the same rejected Promise during this period. When this option is enabled (`true`), the rejected Promise will be immediately deleted from the cache. As a result, the next call with the same cache key will execute the original function again, potentially giving the opportunity to retry the operation or produce a different result. The default value is `false`.
+
 ## Argument options
 
 ```ts
 interface CacheArgumentOptions {
 	ignoreCached?: boolean;
 	useSharedCache?: boolean;
+	deleteRejectedPromise?: boolean;
 
 	// The options below are inherited from the underlying library's options
 	ttl?: number;
@@ -497,7 +501,10 @@ Argument options allow you to modify the caching behavior for a **single method 
 Some of these options will override the corresponding settings defined in the decorator's [options]
 
 - `ignoreCached` – Specifies whether to ignore the cached value. When set to `true`, the original method is executed regardless of a cached result, and the new result then replaces the cached one. The default value is `false`.
+
 - `useSharedCache` – Determines if a specific method call should use a shared cache across multiple class instances, even when the [@IsolatedCache](#isolatedcache) decorator is applied to the class. By default, it adopts the value defined in the [@Cached decorator options](#cached-options).
+
+- `deleteRejectedPromise` - Determines whether to delete a rejected Promise from the cache. If a cached Promise is rejected (fails to resolve), it will normally remain in the cache for the specified TTL, meaning any subsequent calls with the same cache key will return the same rejected Promise during this period. When this option is enabled (`true`), the rejected Promise will be immediately deleted from the cache. As a result, the next call with the same cache key will execute the original function again, potentially giving the opportunity to retry the operation or produce a different result. The default value is `false`.
 
 > [!IMPORTANT]
 > To enable argument options, `useArgumentOptions` must be set to `true` in the decorator options; otherwise, they will be ignored.
@@ -568,11 +575,11 @@ All files                     |     100 |      100 |     100 |     100 |
 ------------------------------|---------|----------|---------|---------|-------------------
 
 Test Suites: 5 passed, 5 total
-Tests:       71 passed, 71 total
+Tests:       75 passed, 75 total
 Snapshots:   0 total
-Time:        3.49 s, estimated 4 s
+Time:        4.263 s
 Ran all test suites.
-Done in 3.86s.
+Done in 4.73s.
 ```
 
 ## Support
