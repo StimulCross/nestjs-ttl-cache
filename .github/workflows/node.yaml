@@ -30,7 +30,7 @@ jobs:
     test:
         strategy:
             matrix:
-                node-version: [20, 21, 22, 23]
+                node-version: [20, 22, 23]
 
         needs: [build]
         runs-on: ubuntu-latest
