@@ -19,7 +19,7 @@ jobs:
             - run: yarn
             - run: yarn run build
             - run: yarn run lint
-            - run: yarn run prettier:check
+            - run: yarn run format:check
             - name: Archive build assets
               run: tar cvf build-result.tar ./lib
             - name: Save build assets
