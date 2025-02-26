@@ -1,3 +1,4 @@
+import { setTimeout as sleep } from 'node:timers/promises';
 import type * as TTLCache from '@isaacs/ttlcache';
 import { Logger } from '@nestjs/common';
 import { type NestApplication } from '@nestjs/core';
@@ -7,7 +8,6 @@ import { IsolatedCacheTestService } from './test-app/isolated-cache-test.service
 import { NonInjectableCacheService } from './test-app/non-ijectable-cache.service';
 import { TestService } from './test-app/test.service';
 import { wrapCacheKey } from '../src/utils';
-import { sleep } from './test-app/utils/sleep';
 
 describe('Cached async decorator test suite', () => {
 	let app: NestApplication;

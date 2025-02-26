@@ -1,9 +1,9 @@
+import { setTimeout as sleep } from 'node:timers/promises';
 import type * as TTLCache from '@isaacs/ttlcache';
 import { type NestApplication } from '@nestjs/core';
 import { Test } from '@nestjs/testing';
 import { TtlCacheModule } from '../src';
 import { TTL_CACHE } from '../src/constants';
-import { sleep } from './test-app/utils/sleep';
 
 describe('TTL cache provider test suite', () => {
 	let app: NestApplication;
